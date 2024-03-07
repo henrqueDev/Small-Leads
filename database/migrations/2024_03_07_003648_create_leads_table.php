@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('last_name');
             $table->string('email')->unique();
+            $table->string('phone')->unique();
             $table->boolean('converted')->default(false);
             $table->unsignedBigInteger('company_id');
             $table->unsignedBigInteger('user_id');

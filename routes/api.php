@@ -14,11 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+use App\Models\Company;
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 
 Route::get('/companies', function (Request $request) {
-    return ['mijao'];
+    return Company::all();
 });

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -44,11 +45,11 @@ class User extends Authenticatable
     ];
 
     public function tags(){
-        return this->hasMany(Tag::class, 'user_id');
+        return $this->hasMany(Tag::class);
     }
 
 
     public function leads(){
-        return this->hasMany(Lead::class, 'user_id');
+        return $this->hasMany(Lead::class);
     }
 }

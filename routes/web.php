@@ -36,6 +36,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/leads', [LeadController::class, 'create'])->name('leads.create');
+Route::get('/leads-create', [LeadController::class, 'create'])->name('leads.create');
+Route::post('/leads-store', [LeadController::class, 'store'])->name('leads.store');
+
+Route::get('/leads-list', [LeadController::class, 'list'])->name('leads.list');
+
+Route::get('/leads-edit', [LeadController::class, 'edit'])->name('leads.edit');
 
 require __DIR__.'/auth.php';
