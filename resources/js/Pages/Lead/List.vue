@@ -1,4 +1,6 @@
 <script setup>
+
+import { ref, onMounted, computed } from "vue";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 
@@ -14,7 +16,31 @@ const leadsHeaders = [
     "Sobrenome",
     "Empresa",
     "Telefone",
+    "Convertido?"
 ]
+
+
+const sortBy = ref("Nome");  
+const sortDesc = ref(false);
+
+const sortLeads = (header, list) => {
+  const headerValue = header.toLowerCase();
+  const isCurrentSort = headerValue === sortBy.value;
+
+  sortDesc.value = isCurrentSort ? !sortDesc.value : false;
+  sortBy.value = headerValue;
+
+  list.sort((a, b) => {
+    const firstValue = a[sortBy.value];
+    const secondValue = b[sortBy.value];
+
+    if (sortDesc.value) {
+      return secondValue.localeCompare(firstValue);
+    } else {
+      return firstValue.localeCompare(secondValue);
+    }
+  });
+};
 
 
 </script>
@@ -35,8 +61,11 @@ const leadsHeaders = [
                         <table class="w-full border border-separate border-gray-200 dark:border-gray-700 rounded-md p-2">
                             <thead>
                                 <tr class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                                    <th v-for="header in leadsHeaders">
-                                        {{ header }}
+                                    <th 
+                                        class="px-4 py-2"
+                                        v-for="header in leadsHeaders"
+                                    >  
+                                            {{ header }}
                                     </th>
                                 </tr>
                             </thead>
@@ -46,6 +75,7 @@ const leadsHeaders = [
                                     <td class="text-center">{{ lead.last_name }}</td>
                                     <td class="text-center">{{ lead.company.name }}</td> 
                                     <td class="text-center">{{ lead.phone }}</td>
+                                    <td class="text-center">{{ lead.converted ? 'Sim' : 'Não' }}</td>
                                 </tr>
                             </tbody>
                         </table>
