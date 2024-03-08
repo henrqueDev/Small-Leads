@@ -26,8 +26,7 @@ class LeadController extends Controller
         $user = $request->user();
         $filters = $request->query();
         $query = $user->leads()->with('user')->with('company');
-        $filter = in_array('filter', $filters) ? $filters['filter'] : [];
-        
+        $filter = array_key_exists('filter', $filters) ? $filters['filter'] : [];
 
         foreach ($filter as $field => $value) {
             if (in_array($field, ['name', 'email', 'phone'])) {
@@ -37,7 +36,7 @@ class LeadController extends Controller
             }
         }
 
-        $leads = $query->paginate(10);
+        $leads = $query->paginate(10)->withQueryString();
 
         return Inertia::render('Lead/List', ['leads' => $leads]);
     }

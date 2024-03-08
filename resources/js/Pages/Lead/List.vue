@@ -5,15 +5,27 @@ import { Head, usePage, router } from "@inertiajs/vue3";
 import TablePaginationFooter from "./Partials/TablePaginationFooter.vue";
 import LeadsFilter from "./Partials/LeadsFilter.vue";
 
-defineProps({
+const props = defineProps({
   leads: {
     type: Object,
   }
 });
 
-const leadsHeaders = ["Name", "Last name", "Company", "Phone", "Converted?"];
+const leadsHeaders = ["Name", "Last name", "Email", "Phone", "Company", "Converted?", "Actions  "];
 
 const showFilter = ref(false);
+
+const queryParams = (...args) => {
+
+            let queryString = usePage().props.url;
+            console.log(queryString);
+            if (queryString.indexOf("?") === -1) {
+                return {};
+            }
+
+            queryString = queryString.substring(queryString.indexOf("?") + 1);
+            return Object.assign(Object.fromEntries(new URLSearchParams(queryString)), ...args);
+        }
 
 
 
@@ -28,7 +40,6 @@ const filterMethod = (filter) => {
 	router.get(route('leads.list'), {
         filter: filter});
 };
-
 
 </script>
 
@@ -71,11 +82,14 @@ const filterMethod = (filter) => {
                   v-for="(lead, i) in leads.data"
                   :key="i"
                 >
-                  <td class="text-center">{{ lead.name }}</td>
-                  <td class="text-center">{{ lead.last_name }}</td>
-                  <td class="text-center">{{ lead.company.name }}</td>
-                  <td class="text-center">{{ lead.phone }}</td>
-                  <td class="text-center">{{ lead.converted ? "Yes" : "No" }}</td>
+                  <td class="text-center p-2 rounded-sm">{{ lead.name }}</td>
+                  <td class="text-center p-2 rounded-sm">{{ lead.last_name }}</td>
+                  
+                  <td class="text-center p-2 rounded-sm">{{ lead.email }}</td>
+                  <td class="text-center p-2 rounded-sm">{{ lead.phone }}</td>
+                  <td class="text-center p-2 rounded-sm">{{ lead.company.name }}</td>
+                  
+                  <td class="text-center p-2  rounded-sm">{{ lead.converted ? "Yes" : "No" }}</td>
                 </tr>
               </tbody>
             </table>

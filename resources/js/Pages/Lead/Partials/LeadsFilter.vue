@@ -7,7 +7,7 @@
     import PrimaryButton from '@/Components/PrimaryButton.vue';
     import TextInput from '@/Components/TextInput.vue';
     import InputError from '@/Components/InputError.vue';
-    
+
     const props =  defineProps({
             show: {
                 type: Boolean,
@@ -24,6 +24,8 @@
         phone: '',
         company_id: null
     });
+    
+    console.log(filter);
 
     const emit = defineEmits(['close', 'filter']);
 
@@ -36,16 +38,42 @@
     };
 
     const fetchData = async () => {
-    try {
-        const response = await axios.get('/api/companies');
-        companies.value = response.data;
-    } catch (error) {
-        console.error("Error fetching mineral log data:", error);
-    }
+        try {
+            const response = await axios.get('/api/companies');
+            companies.value = response.data;
+        } catch (error) {
+            console.error("Error fetchData: ", error);
+        }
     }
 
-    onMounted(fetchData);
+    
+    const queryParams = (...args) => {
+        let queryString = window.location.search;
 
+        if (queryString.indexOf("?") === -1) {
+            return {};
+        }
+
+        queryString = queryString.substring(queryString.indexOf("?") + 1);
+        console.log(queryString);
+        let updatedQuery = new URLSearchParams(queryString);
+        let updatedFilter = {
+            name: updatedQuery.get('filter[name]'),
+            email: updatedQuery.get('filter[email]'),
+            phone: updatedQuery.get('filter[phone]'),
+            company_id: updatedQuery.get('filter[company_id]')
+        };
+        console.log();
+        
+        
+        return updatedFilter;
+    }
+
+
+    onMounted(() => {
+        fetchData();
+        filter.value = queryParams();
+    });
 </script>
 
 <template>
