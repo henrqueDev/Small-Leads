@@ -24,7 +24,21 @@ class LeadController extends Controller
     public function list(Request $request): Response
     {
         $user = $request->user();
-        $leads = $user->leads()->with('user')->with('company')->paginate(10);
+        $filters = $request->query();
+        $query = $user->leads()->with('user')->with('company');
+        $filter = in_array('filter', $filters) ? $filters['filter'] : [];
+        
+
+        foreach ($filter as $field => $value) {
+            if (in_array($field, ['name', 'email', 'phone'])) {
+                $query->where($field, 'like', '%' . $value . '%');
+            } elseif ($field === 'company_id' && is_numeric($value)) {
+                $query->where('company_id', $value);
+            }
+        }
+
+        $leads = $query->paginate(10);
+
         return Inertia::render('Lead/List', ['leads' => $leads]);
     }
 
