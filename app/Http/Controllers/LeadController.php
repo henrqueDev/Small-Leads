@@ -24,8 +24,8 @@ class LeadController extends Controller
     public function list(Request $request): Response
     {
         $user = $request->user();
-        $leads = $user->leads()->with('user')->with('company')->get();
-        return Inertia::render('Lead/List', ['leads' => $leads ]);
+        $leads = $user->leads()->with('user')->with('company')->paginate(10);
+        return Inertia::render('Lead/List', ['leads' => $leads]);
     }
 
     public function store(LeadRequest $request): RedirectResponse 

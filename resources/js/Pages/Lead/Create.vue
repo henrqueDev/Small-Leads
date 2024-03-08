@@ -39,7 +39,7 @@ const submit = () => {
     <AuthenticatedLayout>
 
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Cadastrar lead</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Create lead</h2>
         </template>
 
         <div class="py-12">
@@ -66,7 +66,7 @@ const submit = () => {
 
                                 <div>
                 
-                                    <InputLabel for="last_name" value="Sobrenome" />
+                                    <InputLabel for="last_name" value="Last name" />
 
                                     <TextInput
                                         id="last_name"
@@ -102,7 +102,7 @@ const submit = () => {
                             </div>
 
                             <div class="mt-4">
-                                <InputLabel for="phone" value="Telefone" />
+                                <InputLabel for="phone" value="Phone" />
 
                                 <TextInput
                                     id="phone"
