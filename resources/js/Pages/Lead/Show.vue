@@ -4,30 +4,16 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, usePage, router } from "@inertiajs/vue3";
 import TablePaginationFooter from "./Partials/TablePaginationFooter.vue";
 import LeadsFilter from "./Partials/LeadsFilter.vue";
-import NavLink from '@/Components/NavLink.vue';
 
 const props = defineProps({
-  leads: {
+  lead: {
     type: Object,
+    required: true
   }
 });
 
-const leadsHeaders = ["Name", "Last name", "Email", "Phone", "Company", "Converted?", "Actions"];
-
-const showFilter = ref(false);
-
-const sortBy = ref("Name");
-const sortDesc = ref(false);
-
-const showFilterAction = () => {
-    showFilter.value = true;
-};
-
-const filterMethod = (filter) => {
-	router.get(route('leads.list'), {
-        filter: filter});
-};
-
+const leadsHeaders = ["Name", "Last name", "Email", "Phone", "Company", "Converted?"];
+console.log(props.lead);
 </script>
 
 <template>
@@ -46,10 +32,6 @@ const filterMethod = (filter) => {
         
 
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-        
-            <button class="m-5 p-2 bg-white rounded-md" @click="showFilterAction()">Filtro</button>
-            <LeadsFilter :show="showFilter" @filter="(params)=>{filterMethod(params)}" @close="showFilter = false" />
-
             <div class="p-3 text-gray-900 dark:text-gray-100">
                 <table class="w-full border border-separate border-gray-200 dark:border-gray-700 rounded-md p-2">
 
@@ -66,27 +48,19 @@ const filterMethod = (filter) => {
               <tbody>
                 <tr
                   class="bg-gray-100 dark:bg-gray-700 d-flex justify-center align-items-center"
-                  v-for="(lead, i) in leads.data"
-                  :key="i"
                 >
-                  <td class="text-center p-2 rounded-sm">{{ lead.name }}</td>
-                  <td class="text-center p-2 rounded-sm">{{ lead.last_name }}</td>
+                  <td class="text-center p-2 rounded-sm">{{ props.lead.name }}</td>
+                  <td class="text-center p-2 rounded-sm">{{ props.lead.last_name }}</td>
                   
-                  <td class="text-center p-2 rounded-sm">{{ lead.email }}</td>
-                  <td class="text-center p-2 rounded-sm">{{ lead.phone }}</td>
-                  <td class="text-center p-2 rounded-sm">{{ lead.company.name }}</td>
+                  <td class="text-center p-2 rounded-sm">{{ props.lead.email }}</td>
+                  <td class="text-center p-2 rounded-sm">{{ props.lead.phone }}</td>
+                  <td class="text-center p-2 rounded-sm">{{ props.lead.company.name }}</td>
                   
-                  <td class="text-center p-2  rounded-sm">{{ lead.converted ? "Yes" : "No" }}</td>
-                  <td class="text-center p-2  rounded-sm">
-                    <NavLink :href="route('leads.show', {lead: lead})">
-                      Show
-                    </NavLink>
-
-                  </td>
+                  <td class="text-center p-2  rounded-sm">{{ props.lead.converted ? "Yes" : "No" }}</td>
                 </tr>
               </tbody>
             </table>
-            <TablePaginationFooter :links="leads.links" />
+            <!--<TablePaginationFooter :links="leads.links" />-->
           </div>
         </div>
       </div>

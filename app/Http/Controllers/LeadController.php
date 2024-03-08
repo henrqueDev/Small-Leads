@@ -36,9 +36,15 @@ class LeadController extends Controller
             }
         }
 
-        $leads = $query->paginate(1)->withQueryString();
+        $leads = $query->paginate(10)->withQueryString();
 
         return Inertia::render('Lead/List', ['leads' => $leads]);
+    }
+
+    public function show(Lead $lead): Response{
+        //dd($lead);
+        $leadShow = $lead->load(['company']);
+        return Inertia::render('Lead/Show', ['lead' => $lead]);
     }
 
     public function store(LeadRequest $request): RedirectResponse 

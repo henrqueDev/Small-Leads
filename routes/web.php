@@ -41,6 +41,8 @@ Route::post('/leads-store', [LeadController::class, 'store'])->middleware(['auth
 
 Route::get('/leads-list', [LeadController::class, 'list'])->middleware(['auth', 'verified'])->name('leads.list');
 
-Route::get('/leads-edit', [LeadController::class, 'edit'])->middleware(['auth', 'verified'])->name('leads.edit');
+Route::get('/leads-show/{lead}', [LeadController::class, 'show'])->middleware(['auth', 'verified'])->name('leads.show');
+
+Route::get('/leads-edit/{lead}', [LeadController::class, 'edit'])->middleware(['auth', 'verified'])->name('leads.edit');
 
 require __DIR__.'/auth.php';
