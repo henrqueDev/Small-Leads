@@ -15,20 +15,6 @@ const leadsHeaders = ["Name", "Last name", "Email", "Phone", "Company", "Convert
 
 const showFilter = ref(false);
 
-const queryParams = (...args) => {
-
-            let queryString = usePage().props.url;
-            console.log(queryString);
-            if (queryString.indexOf("?") === -1) {
-                return {};
-            }
-
-            queryString = queryString.substring(queryString.indexOf("?") + 1);
-            return Object.assign(Object.fromEntries(new URLSearchParams(queryString)), ...args);
-        }
-
-
-
 const sortBy = ref("Name");
 const sortDesc = ref(false);
 
