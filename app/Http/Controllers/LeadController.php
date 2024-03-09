@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Models\Lead;
 use App\Http\Requests\LeadRequest;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\Company;
 
 class LeadController extends Controller
 {
@@ -41,7 +42,8 @@ class LeadController extends Controller
         return Inertia::render('Lead/List', ['leads' => $leads]);
     }
 
-    public function show(Lead $lead): Response{
+    public function show(Lead $lead): Response
+    {
         //dd($lead);
         $leadShow = $lead->load(['company']);
         return Inertia::render('Lead/Show', ['lead' => $lead]);
@@ -49,12 +51,19 @@ class LeadController extends Controller
 
     public function store(LeadRequest $request): RedirectResponse 
     {
+        $request->validated();
+
         $data = $request->all();
         $data['user_id'] = $request->user()->id;
         
+        if($request->new_company && ($request->new_company != '' || $request->new_company != null)){
+            $newCompany = Company::create(['name' => $request->new_company, 'user_id' => $request->user()->id]);
+            //echo($newCompany->id);
+            $data['company_id'] = $newCompany->id;
+        }
         Lead::create($data);
 
-        return Redirect::route('profile.edit');
+        return Redirect::route('leads.list');
     }
 
 }

@@ -22,5 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::get('/companies', function (Request $request) {
-    return Company::all();
+    $companies = Company::all();
+    return $companies;
 });

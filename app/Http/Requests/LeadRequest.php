@@ -26,7 +26,8 @@ class LeadRequest extends FormRequest
             "last_name" => "required",
             "email" => "required",
             "phone" => "required",
-            "company_id" => "required",
+            "company_id" => "required_without:new_company",
+            "new_company" => "required_without:company_id"
         ];
     }
 }

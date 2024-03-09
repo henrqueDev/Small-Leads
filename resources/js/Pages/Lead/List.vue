@@ -49,7 +49,7 @@ const filterMethod = (filter) => {
         
             <button class="m-5 p-2 bg-white rounded-md" @click="showFilterAction()">Filtro</button>
             <LeadsFilter :show="showFilter" @filter="(params)=>{filterMethod(params)}" @close="showFilter = false" />
-
+            <NavLink class="m-5 p-3 bg-white rounded-xl" :href="route('leads.create')">+</NavLink>
             <div class="p-3 text-gray-900 dark:text-gray-100">
                 <table class="w-full border border-separate border-gray-200 dark:border-gray-700 rounded-md p-2">
 

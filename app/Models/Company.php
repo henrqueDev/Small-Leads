@@ -12,10 +12,10 @@ class Company extends Model
     protected $table = 'companies';
 
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'user_id'];
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function leads(){
