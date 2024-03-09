@@ -13,18 +13,23 @@ use App\Http\Requests\LeadRequest;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\Company;
 
+use App\Models\Tag;
+
 class LeadController extends Controller
 {
     //
 
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render('Lead/Create');
+        $user = $request->user();
+        $tags = Tag::all()->where('user_id', $user->id);
+        return Inertia::render('Lead/Create', ['tags' => $tags]);
     }
 
     public function list(Request $request): Response
     {
         $user = $request->user();
+        $tags = $user->tags();
         $filters = $request->query();
         $query = $user->leads()->with('user')->with('company');
         $filter = array_key_exists('filter', $filters) ? $filters['filter'] : [];
@@ -38,8 +43,8 @@ class LeadController extends Controller
         }
 
         $leads = $query->paginate(10)->withQueryString();
-
-        return Inertia::render('Lead/List', ['leads' => $leads]);
+        
+        return Inertia::render('Lead/List', ['leads' => $leads, 'tags' => $tags]);
     }
 
     public function show(Lead $lead): Response

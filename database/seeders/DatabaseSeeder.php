@@ -6,6 +6,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Lead;
+use App\Models\Tag;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,11 +18,14 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        User::factory()->count(3)->has(Company::factory()->count(5)->state(function (array $attributes, User $user) {
-            return ['user_id' => $user->id];
-        }))->create([
-             'password' => env('TEST_USERS_PASSWORD')
-         ]);
+        User::factory()->count(3)->has(
+            Company::factory()->count(5)->has(
+                Lead::factory()->count(3)
+                ),
+            
+        )->has(Tag::factory()->count(4))->create([
+            'password' => env('TEST_USERS_PASSWORD')
+        ]);
 
     }
 }

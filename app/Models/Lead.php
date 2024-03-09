@@ -27,4 +27,9 @@ class Lead extends Model
     public function user(){
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function leadTags(){
+        return $this->has_many(LeadTag::class);
+    }
+
 }
