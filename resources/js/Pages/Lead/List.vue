@@ -96,6 +96,8 @@ const filterMethod = (filter) => {
                   </td>
                   <td class="text-center p-2 rounded-sm">
                     <NavLink :href="route('leads.show', { lead: lead })"> Show </NavLink>
+
+                    <NavLink :href="route('leads.edit', { lead: lead })"> Edit </NavLink>
                   </td>
                 </tr>
               </tbody>

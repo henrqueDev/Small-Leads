@@ -84,4 +84,26 @@ class LeadController extends Controller
         return Redirect::route('leads.list');
     }
 
+    public function edit(Request $request, Lead $lead): Response
+    {
+        $user = $request->user();
+        $tags = Tag::all()->where('user_id', $user->id);
+        $leadTags = $lead->leadTags->load(['tag']);
+
+        return Inertia::render('Lead/Edit', ['lead' => $lead, 'tags' => $tags, 'leadTags' => $leadTags]);
+    }
+
+    public function update(LeadRequest $request, Lead $lead): RedirectResponse
+    {
+        $user = $request->user();
+        $filters = $request->query();
+        //dd($query);
+        $lead->update([
+            'name' => $request->name
+        ]);
+
+
+       return Redirect::route('tags.list');
+    }
+
 }

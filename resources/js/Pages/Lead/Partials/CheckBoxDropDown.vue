@@ -6,10 +6,15 @@ const props = defineProps({
     type: Array,
     required: false,
   },
+  alreadySelectedTags: {
+    type: Array,
+    required: false,
+    default: () => [],
+  },
 });
 console.log(props.tags);
 const isOpen = ref(false);
-const tagsSelected = ref([]);
+const tagsSelected = ref(props.alreadySelectedTags);
 const searchQuery = ref("");
 const tagsFiltered = ref(props.tags);
 const toggleDropdown = () => {
