@@ -39,14 +39,15 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/leads-create', [LeadController::class, 'create'])->middleware(['auth', 'verified'])->name('leads.create');
 Route::post('/leads-store', [LeadController::class, 'store'])->middleware(['auth', 'verified'])->name('leads.store');
-
 Route::get('/leads-list', [LeadController::class, 'list'])->middleware(['auth', 'verified'])->name('leads.list');
-
 Route::get('/leads-show/{lead}', [LeadController::class, 'show'])->middleware(['auth', 'verified'])->name('leads.show');
-
 Route::get('/leads-edit/{lead}', [LeadController::class, 'edit'])->middleware(['auth', 'verified'])->name('leads.edit');
 
 
 Route::get('/tags-list', [TagController::class, 'list'])->middleware(['auth', 'verified'])->name('tags.list');
+Route::patch('/tags-update/{tag}', [TagController::class, 'update'])->middleware(['auth', 'verified'])->name('tags.update');
+Route::delete('/tags-update/{tag}', [TagController::class, 'destroy'])->middleware(['auth', 'verified'])->name('tags.destroy');
+
+
 
 require __DIR__.'/auth.php';

@@ -29,7 +29,7 @@ class Lead extends Model
     }
 
     public function leadTags(){
-        return $this->has_many(LeadTag::class);
+        return $this->hasMany(LeadTag::class);
     }
 
 }

@@ -3,27 +3,33 @@ import { ref, defineProps, watch } from "vue";
 
 const props = defineProps({
   tags: {
-    type: Array,
+    type: Object,
     required: false,
   },
 });
-
+console.log(props.tags);
 const isOpen = ref(false);
-
+const tagsSelected = ref([]);
 const searchQuery = ref("");
 const tagsFiltered = ref(props.tags);
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
 };
-const emit = defineEmits(["newSearch"]);
+const emit = defineEmits(["newSearch", "tagSelected"]);
 
 const handleSearch = () => {
-  tagsFiltered.value = props.tags.filter((tag) =>
-    tag.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  let entries = Object.entries(props.tags);
+  //console.log(entries[0][1]);
+  tagsFiltered.value = entries.filter((tag) =>
+    tag[1].name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
+  tagsFiltered.value = Object.fromEntries(tagsFiltered.value);
   emit("newSearch", tagsFiltered.value);
 };
 
+watch(tagsSelected, () => {
+  emit("tagSelected", tagsSelected.value);
+});
 watch(searchQuery, handleSearch);
 </script>
 
@@ -31,7 +37,7 @@ watch(searchQuery, handleSearch);
   <button
     :class="{ active: isOpen }"
     @click="toggleDropdown"
-    class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-gray-700 rounded-lg hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
     type="button"
   >
     Tags
@@ -52,10 +58,7 @@ watch(searchQuery, handleSearch);
     </svg>
   </button>
 
-  <div
-    v-show="isOpen"
-    class="z-10 absolute bg-white rounded-lg shadow w-60 dark:bg-gray-700"
-  >
+  <div v-show="isOpen" class="z-10 bg-white rounded-lg shadow w-60 dark:bg-gray-700">
     <div class="p-3">
       <label for="input-group-search" class="sr-only">Search</label>
       <div class="relative">
@@ -65,7 +68,6 @@ watch(searchQuery, handleSearch);
           <svg
             class="w-4 h-4 text-gray-500 dark:text-gray-400"
             aria-hidden="true"
-            @click="handleSearch()"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 20 20"
@@ -83,7 +85,7 @@ watch(searchQuery, handleSearch);
           type="text"
           id="input-group-search"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="Search user"
+          placeholder="Search tag"
           v-model="searchQuery"
         />
       </div>
@@ -97,13 +99,14 @@ watch(searchQuery, handleSearch);
           class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600"
         >
           <input
-            id="checkbox-item-16"
+            :id="'checkbox-tag-' + tag.id"
             type="checkbox"
-            :value="tag.id"
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+            :value="tag[1]"
+            v-model="tagsSelected"
+            class="w-4 h-4 block text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
           />
           <label
-            for="checkbox-item-16"
+            :for="'checkbox-tag-' + tag.id"
             class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
             >{{ tag.name }}</label
           >

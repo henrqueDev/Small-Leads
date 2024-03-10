@@ -18,7 +18,11 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@sweetalert2/themes": "^5.0.16",
         "flowbite": "^2.3.0",
+        "sass": "^1.71.1",
+        "sweetalert2": "^11.10.6",
+        "vue-sweetalert2": "^5.0.5",
         "vuetify": "^3.5.8"
     }
 }

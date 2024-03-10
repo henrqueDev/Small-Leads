@@ -12,7 +12,7 @@ class LeadTag extends Model
     protected $table = 'lead_tags';
 
 
-    protected $fillable = ['name', 'lead_id', 'tag_id', 'user_id'];
+    protected $fillable = ['lead_id', 'tag_id', 'user_id'];
 
 
     public function user(){

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\Company;
 
 use App\Models\Tag;
+use App\Models\LeadTag;
 
 class LeadController extends Controller
 {
@@ -51,7 +52,12 @@ class LeadController extends Controller
     {
         //dd($lead);
         $leadShow = $lead->load(['company']);
-        return Inertia::render('Lead/Show', ['lead' => $lead]);
+        $leadTags = $lead->load(['leadTags']);
+        
+        //dd($leadTags);
+        $tags = $lead->leadTags->load(['tag']);
+
+        return Inertia::render('Lead/Show', ['lead' => $lead, 'tags' => $tags]);
     }
 
     public function store(LeadRequest $request): RedirectResponse 
@@ -61,13 +67,20 @@ class LeadController extends Controller
         $data = $request->all();
         $data['user_id'] = $request->user()->id;
         
+        //dd($data['tags']);
+
         if($request->new_company && ($request->new_company != '' || $request->new_company != null)){
             $newCompany = Company::create(['name' => $request->new_company, 'user_id' => $request->user()->id]);
             //echo($newCompany->id);
             $data['company_id'] = $newCompany->id;
         }
-        Lead::create($data);
-
+        $lead = Lead::create($data);
+        if($data['tags']){
+            $tags = $data['tags'];
+            foreach($tags as $tag){
+                LeadTag::create(['lead_id' => $lead->id, 'tag_id' => $tag['id'],  'user_id' => $data['user_id']]);
+            } 
+        }
         return Redirect::route('leads.list');
     }
 

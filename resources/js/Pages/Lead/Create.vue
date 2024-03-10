@@ -7,13 +7,12 @@ import TextInput from "@/Components/TextInput.vue";
 import { ref, onMounted, computed, watch, defineProps } from "vue";
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 import CheckBoxDropDown from "@/Pages/Lead/Partials/CheckBoxDropDown.vue";
-
+import AddIcon from "@/Components/AddIcon.vue";
 const props = defineProps({
   tags: {
     type: Object,
     required: false,
   },
-  companies: {},
 });
 
 const companies = ref([]);
@@ -26,12 +25,9 @@ async function fetchData() {
   }
 }
 
-const tags = ref(props.tags);
+console.log(props.tags["8"]);
 
-console.log(tags.value);
 const company_not_found = ref(false);
-
-onMounted(fetchData);
 
 const form = useForm({
   name: "",
@@ -40,7 +36,10 @@ const form = useForm({
   phone: "",
   company_id: null,
   new_company: null,
+  tags: [],
 });
+
+onMounted(fetchData);
 
 watch(company_not_found, () => {
   if (company_not_found == true) {
@@ -52,6 +51,16 @@ watch(company_not_found, () => {
 
 const submit = () => {
   form.post(route("leads.store"));
+};
+
+const toggleTagForm = () => {
+  showTagForm.value = !showTagForm.value;
+};
+
+const loadTagsSelected = (tagsSelected) => {
+  form.tags = tagsSelected;
+
+  console.log(form.tags);
 };
 </script>
 
@@ -136,8 +145,17 @@ const submit = () => {
               </div>
 
               <div class="mt-4">
-                <CheckBoxDropDown :tags="tags" />
-                <button @click="console.log('clicou')">+</button>
+                <CheckBoxDropDown
+                  @tagSelected="(tagsSelected) => loadTagsSelected(tagsSelected)"
+                  :tags="tags"
+                />
+
+                <div
+                  v-for="tag in form.tags"
+                  class="inline-flex border dark:border-white-500 bg-opacity-0 items-center ml-3 px-4 py-2 text-sm font-medium text-center text-white bg-blue-100 rounded-lg hover:bg-blue-100 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-1000 dark:hover:bg-white-500 dark:hover:text-gray-900 dark:focus:ring-blue-800"
+                >
+                  {{ tag.name }}
+                </div>
               </div>
 
               <div class="mt-4 grid grid-cols-12">
@@ -145,7 +163,8 @@ const submit = () => {
                   <InputLabel for="company" value="Company" />
                   <select
                     :disabled="company_not_found"
-                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                    required
+                    class="w-75 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                     v-model="form.company_id"
                   >
                     <option
@@ -177,8 +196,9 @@ const submit = () => {
                   <input
                     id="new_company"
                     type="text"
-                    class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                    class="border-gray-300 dark:disabled:bg-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                     :disabled="!company_not_found"
+                    required
                     v-model="form.new_company"
                     autocomplete="new_company"
                   />

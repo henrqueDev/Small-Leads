@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, usePage, router } from "@inertiajs/vue3";
-import TablePaginationFooter from "./Partials/TablePaginationFooter.vue";
+import TablePaginationFooter from "@/Components/TablePaginationFooter.vue";
 import LeadsFilter from "./Partials/LeadsFilter.vue";
 import NavLink from '@/Components/NavLink.vue';
 

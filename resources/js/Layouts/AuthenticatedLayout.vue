@@ -10,6 +10,10 @@ import { Link } from '@inertiajs/vue3';
 const showingNavigationDropdown = ref(false);
 </script>
 
+<style lang="scss">
+  @import '@sweetalert2/themes/dark/dark.scss';
+</style>
+
 <template>
     <div>
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
