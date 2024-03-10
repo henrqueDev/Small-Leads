@@ -24,9 +24,8 @@ async function fetchData() {
     console.error("Error fetching mineral log data:", error);
   }
 }
-
-console.log(props.tags["8"]);
-
+const tags = ref(Object.entries(props.tags).map(([key, value]) => value));
+console.log(tags.value);
 const company_not_found = ref(false);
 
 const form = useForm({
@@ -58,7 +57,8 @@ const toggleTagForm = () => {
 };
 
 const loadTagsSelected = (tagsSelected) => {
-  form.tags = tagsSelected;
+  console.log(tagsSelected);
+  form.tags = Object.entries(tagsSelected).map(([key, value]) => value);
 
   console.log(form.tags);
 };
@@ -119,7 +119,7 @@ const loadTagsSelected = (tagsSelected) => {
                 <TextInput
                   id="email"
                   type="email"
-                  class="mt-1 block w-full"
+                  class="mt-1 block w-full "
                   v-model="form.email"
                   required
                   autocomplete="new-email"

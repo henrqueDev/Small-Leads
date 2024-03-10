@@ -3,7 +3,7 @@ import { ref, defineProps, watch } from "vue";
 
 const props = defineProps({
   tags: {
-    type: Object,
+    type: Array,
     required: false,
   },
 });
@@ -18,16 +18,23 @@ const toggleDropdown = () => {
 const emit = defineEmits(["newSearch", "tagSelected"]);
 
 const handleSearch = () => {
-  let entries = Object.entries(props.tags);
+  let entries = props.tags;
+  //let entries = Object.entries(props.tags);
   //console.log(entries[0][1]);
   tagsFiltered.value = entries.filter((tag) =>
-    tag[1].name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    tag.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
-  tagsFiltered.value = Object.fromEntries(tagsFiltered.value);
+  console.log(tagsFiltered.value);
   emit("newSearch", tagsFiltered.value);
 };
 
 watch(tagsSelected, () => {
+  let entries = props.tags;
+  //let entries = Object.entries(props.tags);
+  //console.log(entries[0][1]);
+  tagsFiltered.value = entries.filter((tag) =>
+    tag.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
   emit("tagSelected", tagsSelected.value);
 });
 watch(searchQuery, handleSearch);
@@ -101,7 +108,7 @@ watch(searchQuery, handleSearch);
           <input
             :id="'checkbox-tag-' + tag.id"
             type="checkbox"
-            :value="tag[1]"
+            :value="tag"
             v-model="tagsSelected"
             class="w-4 h-4 block text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
           />
