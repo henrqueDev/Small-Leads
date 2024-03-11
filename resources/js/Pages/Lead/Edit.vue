@@ -36,6 +36,7 @@ const tags = ref(Object.entries(props.tags).map(([key, value]) => value));
 console.log(tags.value);
 const company_not_found = ref(false);
 const form = useForm({
+  id: props.lead.id,
   name: props.lead.name,
   last_name: props.lead.last_name,
   email: props.lead.email,
@@ -59,7 +60,7 @@ watch(company_not_found, () => {
 });
 
 const updateLead = () => {
-  form.patch(route("leads.update"));
+  form.patch(route("leads.update", { lead: form.id }));
 };
 
 const toggleTagForm = () => {
@@ -224,7 +225,7 @@ const loadTagsSelected = (tagsSelected) => {
                   :class="{ 'opacity-25': form.processing }"
                   :disabled="form.processing"
                 >
-                  Create
+                  Save
                 </PrimaryButton>
               </div>
             </form>

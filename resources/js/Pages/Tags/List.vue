@@ -1,15 +1,12 @@
 <script setup>
-
-
-import Swal from 'sweetalert2'
-import { ref, onMounted, computed, inject } from "vue";
+import Swal from "sweetalert2";
+import { ref, onMounted, computed, inject, watch } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, usePage, router, useForm } from "@inertiajs/vue3";
 import NavLink from "@/Components/NavLink.vue";
 import TextInput from "@/Components/TextInput.vue";
 import TablePaginationFooter from "@/Components/TablePaginationFooter.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-
 
 const props = defineProps({
   tags: {
@@ -30,7 +27,7 @@ const showFilterAction = () => {
 };
 
 const tagsLive = ref(props.tags.data);
-
+console.log(tagsLive.value);
 const editForm = useForm({
   id: null,
   new_tag_name: "",
@@ -48,34 +45,27 @@ const toggleEdit = (tag) => {
   editForm.new_tag_name = tag.name;
 };
 
-const editTag = () => {
-  editForm.patch(route("tags.update", {tag: editForm.id}));
-  
+const editTag = async () => {
+  await editForm.patch(route("tags.update", { tag: editForm.id }));
+
   showEdit.value = 0;
+  router.get(route("tags.list", { page: props.tags.current_page }));
   router.reload();
 
-  Swal.fire({
+  /*Swal.fire({
    position: "top-end",
               icon: 'success',
               title: `Tag ${editForm.new_tag_name} updated!`,
               showConfirmButton: false,
               timer: 1500
   });
+  */
 };
 
-const deleteTag = (tag) => {
-  router.delete(route('tags.destroy', {tag: tag.id}));
-  router.reload();
-  let indexRemove = tagsLive.value.indexOf(tag);
-  tagsLive.value.splice(indexRemove, 1);
-  
-  if(tagsLive.value.length == 0 || tagsLive.value == null){
-    console.log('entrouuu')
-    router.get(route('tags.list', {page: props.tags.current_page - 1}));
-  }
-}
-
-</script> 
+const deleteTag = async (tag) => {
+  await router.delete(route("tags.destroy", { tag: tag.id }));
+};
+</script>
 
 <template>
   <AuthenticatedLayout>
@@ -158,8 +148,6 @@ const deleteTag = (tag) => {
                 </tr>
               </tbody>
             </table>
-
-            <TablePaginationFooter class="mt-1" :links="tags.links" />
           </div>
         </div>
       </div>

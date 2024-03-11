@@ -32,6 +32,7 @@ class LeadController extends Controller
         $user = $request->user();
         $tags = $user->tags();
         $filters = $request->query();
+        
         $query = $user->leads()->with('user')->with('company');
         $filter = array_key_exists('filter', $filters) ? $filters['filter'] : [];
 
@@ -96,12 +97,37 @@ class LeadController extends Controller
     public function update(LeadRequest $request, Lead $lead): RedirectResponse
     {
         $user = $request->user();
-        $filters = $request->query();
-        //dd($query);
-        $lead->update([
-            'name' => $request->name
-        ]);
 
+        $filters = $request->query();
+        $data = $request->all();
+
+        $data['user_id'] = $request->user()->id;
+        
+
+        $lead->update([$data]);
+
+        //dd($lead->load('leadTags')->leadTags->load('tag'));
+        //dd($data['tags']);  
+        if($request->new_company && ($request->new_company != '' || $request->new_company != null)){
+            $newCompany = Company::create(['name' => $request->new_company, 'user_id' => $request->user()->id]);
+            //echo($newCompany->id);
+            $data['company_id'] = $newCompany->id;
+        }
+
+    
+
+        if($data['tags'] || $lead->load('leadTags')->leadTags){
+            $tags = $data['tags'];
+            $leadTags = $lead->load('leadTags')->leadTags;
+            foreach($leadTags as $leadTag){
+                $leadTag->delete();
+            
+            }
+            
+            foreach($tags as $tag){
+                LeadTag::create(['lead_id' => $lead->id, 'tag_id' => $tag['id'],  'user_id' => $data['user_id']]);
+            } 
+        }
 
        return Redirect::route('tags.list');
     }

@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
 
         User::factory()->count(3)->has(
-            Company::factory()->count(5)->has(
+            Company::factory()->count(2)->has(
                 Lead::factory()->count(3)
                 ),
             

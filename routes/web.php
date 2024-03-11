@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\InteractionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,12 +43,20 @@ Route::post('/leads-store', [LeadController::class, 'store'])->middleware(['auth
 Route::get('/leads-list', [LeadController::class, 'list'])->middleware(['auth', 'verified'])->name('leads.list');
 Route::get('/leads-show/{lead}', [LeadController::class, 'show'])->middleware(['auth', 'verified'])->name('leads.show');
 Route::get('/leads-edit/{lead}', [LeadController::class, 'edit'])->middleware(['auth', 'verified'])->name('leads.edit');
+Route::patch('/leads-update/{lead}', [LeadController::class, 'update'])->middleware(['auth', 'verified'])->name('leads.update');
+
 
 
 Route::get('/tags-list', [TagController::class, 'list'])->middleware(['auth', 'verified'])->name('tags.list');
 Route::patch('/tags-update/{tag}', [TagController::class, 'update'])->middleware(['auth', 'verified'])->name('tags.update');
-Route::delete('/tags-update/{tag}', [TagController::class, 'destroy'])->middleware(['auth', 'verified'])->name('tags.destroy');
+Route::delete('/tags-destroy/{tag}', [TagController::class, 'destroy'])->middleware(['auth', 'verified'])->name('tags.destroy');
 
+
+
+Route::get('/interactions-create', [InteractionController::class, 'create'])->middleware(['auth', 'verified'])->name('interactions.create');
+Route::get('/interactions-list', [InteractionController::class, 'list'])->middleware(['auth', 'verified'])->name('interactions.list');
+Route::patch('/interactions-update/{interaction}', [InteractionController::class, 'update'])->middleware(['auth', 'verified'])->name('interactions.update');
+Route::delete('/interactions-destroy/{interaction}', [InteractionController::class, 'destroy'])->middleware(['auth', 'verified'])->name('interactions.destroy');
 
 
 require __DIR__.'/auth.php';

@@ -20,18 +20,18 @@ class TagController extends Controller
     {
         $user = $request->user();
         $filters = $request->query();
+        
         $query = $user->tags();
         //dd($query);
-        $tags = $query->paginate(2)->withQueryString();
+        $tags = $query->paginate()->withQueryString();
 
        return Inertia::render('Tags/List', ['tags' => $tags]);
     }
 
-    public function update(TagRequest $request, Tag $tag): RedirectResponse
+    public function update(Request $request, Tag $tag): RedirectResponse
     {
-        $user = $request->user();
-        $filters = $request->query();
-        //dd($query);
+        //$user = $request->user();
+        //dd($request->new_tag_name);
         $tag->update([
             'name' => $request->new_tag_name
         ]);
