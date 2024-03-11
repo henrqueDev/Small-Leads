@@ -41,7 +41,7 @@ const form = useForm({
 onMounted(fetchData);
 
 watch(company_not_found, () => {
-  if (company_not_found == true) {
+  if (company_not_found.value == true) {
     form.company_id = null;
   } else {
     form.new_company = "";
@@ -175,6 +175,7 @@ const loadTagsSelected = (tagsSelected) => {
                       {{ company.name }}
                     </option>
                   </select>
+                  <InputError class="mt-2" :message="form.errors.company_id" />
                 </div>
                 <div class="col-span-3">
                   <label class="my-8" for="checkbox">Company not found?</label>
@@ -202,6 +203,7 @@ const loadTagsSelected = (tagsSelected) => {
                     v-model="form.new_company"
                     autocomplete="new_company"
                   />
+                  <InputError class="mt-2" :message="form.errors.new_company" />
                 </div>
               </div>
 

@@ -53,8 +53,11 @@ Route::delete('/tags-destroy/{tag}', [TagController::class, 'destroy'])->middlew
 
 
 
-Route::get('/interactions-create', [InteractionController::class, 'create'])->middleware(['auth', 'verified'])->name('interactions.create');
+Route::get('/interactions-create/{lead}', [InteractionController::class, 'create'])->middleware(['auth', 'verified'])->name('interactions.create');
+
+Route::post('/interactions-store', [InteractionController::class, 'store'])->middleware(['auth', 'verified'])->name('interactions.store');
 Route::get('/interactions-list', [InteractionController::class, 'list'])->middleware(['auth', 'verified'])->name('interactions.list');
+Route::get('/interactions-edit/{interaction}', [InteractionController::class, 'edit'])->middleware(['auth', 'verified'])->name('interactions.edit');
 Route::patch('/interactions-update/{interaction}', [InteractionController::class, 'update'])->middleware(['auth', 'verified'])->name('interactions.update');
 Route::delete('/interactions-destroy/{interaction}', [InteractionController::class, 'destroy'])->middleware(['auth', 'verified'])->name('interactions.destroy');
 

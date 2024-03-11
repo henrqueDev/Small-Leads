@@ -8,4 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class InteractionType extends Model
 {
     use HasFactory;
+
+    protected $table = 'interaction_types';
+
+
+
+
+    protected $fillable = ['name', 'user_id'];
+
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+
 }

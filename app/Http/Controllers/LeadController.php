@@ -44,21 +44,24 @@ class LeadController extends Controller
             }
         }
 
-        $leads = $query->paginate(10)->withQueryString();
+        $leads = $query->paginate(5)->withQueryString();
         
         return Inertia::render('Lead/List', ['leads' => $leads, 'tags' => $tags]);
     }
 
-    public function show(Lead $lead): Response
+    public function show(Request $request, Lead $lead): Response
     {
+        if($request->user()->id != $lead->user_id){
+            return Redirect::route('leads.list');
+        }
         //dd($lead);
         $leadShow = $lead->load(['company']);
         $leadTags = $lead->load(['leadTags']);
-        
-        //dd($leadTags);
+        $interactions = $lead->load(['interactions'])->interactions->load(['interactionType']);
+
         $tags = $lead->leadTags->load(['tag']);
 
-        return Inertia::render('Lead/Show', ['lead' => $lead, 'tags' => $tags]);
+        return Inertia::render('Lead/Show', ['lead' => $lead, 'tags' => $tags, 'interactions' => $interactions]);
     }
 
     public function store(LeadRequest $request): RedirectResponse 
@@ -104,7 +107,7 @@ class LeadController extends Controller
         $data['user_id'] = $request->user()->id;
         
 
-        $lead->update([$data]);
+        
 
         //dd($lead->load('leadTags')->leadTags->load('tag'));
         //dd($data['tags']);  
@@ -128,6 +131,8 @@ class LeadController extends Controller
                 LeadTag::create(['lead_id' => $lead->id, 'tag_id' => $tag['id'],  'user_id' => $data['user_id']]);
             } 
         }
+
+        $lead->update($data);
 
        return Redirect::route('tags.list');
     }

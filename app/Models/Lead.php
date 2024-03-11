@@ -17,7 +17,8 @@ class Lead extends Model
         'email',
         'phone',
         'company_id',
-        'user_id'
+        'user_id',
+        'converted'
     ];
 
     public function company() {
@@ -26,6 +27,10 @@ class Lead extends Model
 
     public function user(){
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function interactions(){
+        return $this->hasMany(Interaction::class);
     }
 
     public function leadTags(){

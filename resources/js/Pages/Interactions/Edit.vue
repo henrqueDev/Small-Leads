@@ -5,7 +5,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextArea from "@/Components/TextArea.vue";
 import { ref, onMounted, computed, watch, defineProps } from "vue";
-import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
+import { Head, Link, useForm, usePage, router } from "@inertiajs/vue3";
 import CheckBoxDropDown from "@/Pages/Lead/Partials/CheckBoxDropDown.vue";
 import AddIcon from "@/Components/AddIcon.vue";
 
@@ -16,16 +16,16 @@ import DateInput from "@/Components/DateInput.vue";
 const props = defineProps({
   lead: {
     type: Object,
-    required: true,
+    required: true
   },
-  user: {
+  interaction: {
     type: Object,
-    required: true,
+    required: true
   },
-  interaction_types: {
+  interaction_types:{
     type: Array,
-    required: false
-  },
+    required: true
+  }
 });
 
 console.log(props.lead);
@@ -34,16 +34,18 @@ const lead = ref(props.lead);
 const interaction_type_not_found = ref(false);
 
 const form = useForm({
-  description: '',
-  event_date: '',
-  interaction_type_id: null,
+  id: props.interaction.id,
+  description: props.interaction.description,
+  event_date: props.interaction.event_date,
+  interaction_type_id: props.interaction.interaction_type_id,
   new_interaction_type: '',
-  lead_id: props.lead.id,
+  lead_id: props.interaction.lead_id,
 });
 
 watch(interaction_type_not_found, () => {
   if (interaction_type_not_found.value == true) {
     form.interaction_type_id = null;
+    console.log('CAIU')
   } else {
     form.new_interaction_type = '';
   }
@@ -51,7 +53,11 @@ watch(interaction_type_not_found, () => {
 
 
 const submit = () => {
-  console.log(form.post(route('interactions.store')))
+ form.patch(route("interactions.update", { interaction: form.id }));
+};
+
+const deleteInteraction = async () => {
+     await router.delete(route("interactions.destroy", { interaction: form.id }));
 };
 
 const toggleTagForm = () => {
@@ -133,7 +139,7 @@ const loadleadSelected = (leadSelected) => {
                     class=" w-75 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                     v-model="form.interaction_type_id"
                   >
-                    <option v-for="interaction_type in interaction_types" :key="interaction_type_id" :value="interaction_type.id" >
+                    <option v-for="interaction_type in interaction_types" :key="interaction_type.id" :value="interaction_type.id" >
                       {{ interaction_type.name }}
                     </option>
                   </select>
@@ -175,16 +181,25 @@ const loadleadSelected = (leadSelected) => {
               </div>
 
               <div class="flex items-center justify-center mt-4">
+                
                 <PrimaryButton
                   class="ms-1"
                   :class="{ 'opacity-25': form.processing }"
                   :disabled="form.processing"
                   @click="submit()"
                 >
-                  Register
+                  Save
                 </PrimaryButton>
               </div>
             </form>
+            <PrimaryButton
+                  class="ms-1"
+                  :class="{ 'opacity-25': form.processing }"
+                  :disabled="form.processing"
+                  @click="deleteInteraction()"
+                >
+                  Delete
+                </PrimaryButton>
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('interactions', function (Blueprint $table) {
             $table->id();
-            $table->string('description');
+            $table->text('description');
             $table->date('event_date');
             
             $table->unsignedBigInteger('user_id');
