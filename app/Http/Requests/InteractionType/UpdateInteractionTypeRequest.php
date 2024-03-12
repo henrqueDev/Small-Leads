@@ -26,7 +26,7 @@ class UpdateInteractionTypeRequest extends FormRequest
     {
         return [
             'id' => 'required',
-            'name' => 'required|unique:interaction_types'
+            'name' => 'required'
         ];
     }
 

@@ -24,7 +24,7 @@ class UpdateTagRequest extends FormRequest
     {
         return [
             'id' => 'required',
-            'name' => 'required|unique:tags',
+            'name' => 'required',
         ];
     }
 }

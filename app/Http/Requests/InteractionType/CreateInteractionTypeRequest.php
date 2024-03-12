@@ -24,7 +24,7 @@ class CreateInteractionTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:interaction_types'
+            'name' => 'required'
         ];
     }
 
