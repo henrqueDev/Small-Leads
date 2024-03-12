@@ -8,6 +8,8 @@ import moment from 'moment';
 import NavLink from "@/Components/NavLink.vue";
 import SearchIcon from '@/Components/SearchIcon.vue';
 import ModalDescription from '@/Pages/Interactions/Partials/ModalDescription.vue';
+import TagIcon from '@/Components/TagIcon.vue';
+
 
 const props = defineProps({
   lead: {
@@ -26,8 +28,10 @@ const leadsHeaders = [
   "Email",
   "Phone",
   "Company",
-  "Tags",
   "Converted?",
+  "Is paying?",
+  "Tags",
+  "Actions"
 ];
 
 const interactionHeaders = [
@@ -86,6 +90,15 @@ const showModalAction = (description) => {
                   <td class="text-center p-2 rounded-sm">
                     {{ props.lead.company.name }}
                   </td>
+                  
+
+                  <td class="text-center p-2 rounded-sm">
+                    {{ props.lead.converted ? "Yes" : "No" }}
+                  </td>
+
+                  <td class="text-center p-2 rounded-sm">
+                    {{ props.lead.is_paying ? "Yes" : "No" }}
+                  </td>
 
                   <td class="text-center p-2 rounded-sm">
                     <div
@@ -95,9 +108,8 @@ const showModalAction = (description) => {
                       {{ lead_tag.tag.name }}
                     </div>
                   </td>
-
                   <td class="text-center p-2 rounded-sm">
-                    {{ props.lead.converted ? "Yes" : "No" }}
+                    <NavLink :href="route('leads.edit', { lead: lead })"> Edit </NavLink>
                   </td>
                 </tr>
               </tbody>
@@ -111,7 +123,20 @@ const showModalAction = (description) => {
       <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
           <div class="p-3 text-gray-900 dark:text-gray-100">
-            <a :href="route('interactions.create', {lead: lead.id})">Add</a>
+          <div class="w-full grid grid-cols-9 grid-rows-1 h-full justify-end">
+            <h2
+              class="m-5 p-3 font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight col-span-8"
+            >
+              Interactions
+            </h2>
+
+            
+            <a :href="route('interactions.create', {lead: lead.id})" class="m-3 text-center text-md col-span-1 p-3 text-gray-300 bg-gray-900 p-3  hover:bg-gray-700 duration-150 ease-in-out rounded-xl" >
+              
+              <TagIcon class="mt-3 text-center w-full " />
+              <span class="text-xs">Create Interaction</span>
+            </a>
+          </div>
             <table
               class="w-full border border-separate border-gray-200 dark:border-gray-700 rounded-md p-2"
             >

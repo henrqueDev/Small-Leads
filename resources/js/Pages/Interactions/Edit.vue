@@ -1,4 +1,5 @@
 <script setup>
+import Swal from "sweetalert2";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -8,24 +9,23 @@ import { ref, onMounted, computed, watch, defineProps } from "vue";
 import { Head, Link, useForm, usePage, router } from "@inertiajs/vue3";
 import CheckBoxDropDown from "@/Pages/Lead/Partials/CheckBoxDropDown.vue";
 import AddIcon from "@/Components/AddIcon.vue";
-
+import DangerButton from '@/Components/DangerButton.vue';
 import TextInput from "@/Components/TextInput.vue";
 import DateInput from "@/Components/DateInput.vue";
-
 
 const props = defineProps({
   lead: {
     type: Object,
-    required: true
+    required: true,
   },
   interaction: {
     type: Object,
-    required: true
+    required: true,
   },
-  interaction_types:{
+  interaction_types: {
     type: Array,
-    required: true
-  }
+    required: true,
+  },
 });
 
 console.log(props.lead);
@@ -38,37 +38,47 @@ const form = useForm({
   description: props.interaction.description,
   event_date: props.interaction.event_date,
   interaction_type_id: props.interaction.interaction_type_id,
-  new_interaction_type: '',
+  new_interaction_type: "",
   lead_id: props.interaction.lead_id,
 });
 
 watch(interaction_type_not_found, () => {
   if (interaction_type_not_found.value == true) {
     form.interaction_type_id = null;
-    console.log('CAIU')
+    console.log("CAIU");
   } else {
-    form.new_interaction_type = '';
+    form.new_interaction_type = "";
   }
 });
 
-
 const submit = () => {
- form.patch(route("interactions.update", { interaction: form.id }));
+  form.patch(route("interactions.update", { interaction: form.id }));
 };
 
-const deleteInteraction = async () => {
-     await router.delete(route("interactions.destroy", { interaction: form.id }));
+const deleteInteraction = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.delete(route("interactions.destroy", { interaction: form.id }));
+      }
+    });
 };
+
 
 const toggleTagForm = () => {
   showTagForm.value = !showTagForm.value;
-
 };
 
 const loadleadSelected = (leadSelected) => {
   form.lead = Object.entries(leadSelected).map(([key, value]) => value);
 };
-
 </script>
 
 <template>
@@ -118,28 +128,32 @@ const loadleadSelected = (leadSelected) => {
                   </div>
                   <div>
                     <InputLabel for="event_date" value="Event date" />
-                    <DateInput required type="date" id="event_date" v-model="form.event_date" />
-                    
+                    <DateInput
+                      required
+                      type="date"
+                      id="event_date"
+                      v-model="form.event_date"
+                    />
+
                     <InputError class="mt-2" :message="form.errors.event_date" />
                   </div>
-                  
-
-                 
                 </div>
-                
               </div>
               <div class="mt-4 grid grid-cols-12">
                 <div class="col-span-3">
-                  
                   <InputLabel for="interaction_type" value="Interaction type" />
-                 <select
+                  <select
                     id="interaction_type"
                     :disabled="interaction_type_not_found"
                     required
-                    class=" w-75 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                    class="w-75 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                     v-model="form.interaction_type_id"
                   >
-                    <option v-for="interaction_type in interaction_types" :key="interaction_type.id" :value="interaction_type.id" >
+                    <option
+                      v-for="interaction_type in interaction_types"
+                      :key="interaction_type.id"
+                      :value="interaction_type.id"
+                    >
                       {{ interaction_type.name }}
                     </option>
                   </select>
@@ -176,12 +190,19 @@ const loadleadSelected = (leadSelected) => {
                 </div>
               </div>
 
-              <div class="mt-4">
-                
-              </div>
+              <div class="mt-4"></div>
+              
+            </form>
+            <div class="flex items-center justify-center mt-4">
+              <DangerButton
+                  class="ms-1 mr-4"
+                  :class="{ 'opacity-25': form.processing }"
+                  :disabled="form.processing"
+                  @click="deleteInteraction()"
+                >
+                  Delete
+                </DangerButton>
 
-              <div class="flex items-center justify-center mt-4">
-                
                 <PrimaryButton
                   class="ms-1"
                   :class="{ 'opacity-25': form.processing }"
@@ -191,15 +212,6 @@ const loadleadSelected = (leadSelected) => {
                   Save
                 </PrimaryButton>
               </div>
-            </form>
-            <PrimaryButton
-                  class="ms-1"
-                  :class="{ 'opacity-25': form.processing }"
-                  :disabled="form.processing"
-                  @click="deleteInteraction()"
-                >
-                  Delete
-                </PrimaryButton>
           </div>
         </div>
       </div>

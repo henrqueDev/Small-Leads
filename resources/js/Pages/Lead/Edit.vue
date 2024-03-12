@@ -7,9 +7,10 @@ import { ref, onMounted, computed, watch, defineProps } from "vue";
 import { Head, Link, useForm, usePage, router } from "@inertiajs/vue3";
 import CheckBoxDropDown from "@/Pages/Lead/Partials/CheckBoxDropDown.vue";
 import AddIcon from "@/Components/AddIcon.vue";
-import DangerButton from '@/Components/DangerButton.vue';
-import Swal from 'sweetalert2';
+import DangerButton from "@/Components/DangerButton.vue";
+import Swal from "sweetalert2";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+
 const props = defineProps({
   tags: {
     type: Object,
@@ -25,8 +26,8 @@ const props = defineProps({
   },
   companies: {
     type: Array,
-    required: false
-  }
+    required: false,
+  },
 });
 
 const tags = ref(Object.entries(props.tags).map(([key, value]) => value));
@@ -80,13 +81,13 @@ const deleteLead = () => {
     showCancelButton: true,
     confirmButtonText: "Yes, delete it!",
     cancelButtonText: "No, cancel!",
-    reverseButtons: true
+    reverseButtons: true,
   }).then((result) => {
     if (result.isConfirmed) {
       router.delete(route("leads.destroy", { lead: props.lead.id }));
     }
   });
-  }
+};
 </script>
 
 <template>
@@ -270,28 +271,26 @@ const deleteLead = () => {
                 </div>
               </div>
             </form>
-            
 
-              <div class="flex items-center justify-center mt-4">
-                
-                 <DangerButton
-                  class="ms-1 mr-4"
-                  :class="{ 'opacity-25': form.processing }"
-                  :disabled="form.processing"
-                  @click="deleteLead()"
-                >
-                  Delete
-                </DangerButton>
+            <div class="flex items-center justify-center mt-4">
+              <DangerButton
+                class="ms-1 mr-4"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+                @click="deleteLead()"
+              >
+                Delete
+              </DangerButton>
 
-                <PrimaryButton
-                  class="ms-1"
-                  :class="{ 'opacity-25': form.processing }"
-                  :disabled="form.processing"
-                  @click="updateLead()"
-                >
-                  Save
-                </PrimaryButton>
-              </div>
+              <PrimaryButton
+                class="ms-1"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+                @click="updateLead()"
+              >
+                Save
+              </PrimaryButton>
+            </div>
           </div>
         </div>
       </div>

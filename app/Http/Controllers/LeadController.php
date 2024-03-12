@@ -91,6 +91,40 @@ class LeadController extends Controller
         return Inertia::render('Lead/List', ['leads' => $leads, 'tags' => $tags, 'alreadySelectedTags' => $filterTags ? $filter['tags'] : []]);
     }
 
+
+    public function listConverted(Request $request): Response
+    {
+        $user = $request->user();
+        $tags = $user->load('tags')->tags;
+
+        //dd(Lead::with('leadTags.tag')->get()[0]->leadTags[0]->tag);
+        $filters = $request->query();
+        
+
+        $query = $user->leads()->with('user')->with('company')->with('leadTags.tag');
+        
+        $filter = array_key_exists('filter', $filters) ? $filters['filter'] : [];
+
+        $query->where('converted', 1);
+        $query->orderBy('is_paying', 'desc');
+
+        //dd($filter['converted'] === "false");
+
+        $filterTags = array_key_exists('tags', $filter);
+        if($filterTags){
+            $requestedTags = $filter['tags'];
+
+            $query->whereHas('leadTags', function ($query) use ($requestedTags) {
+                $query->whereIn('tag_id', $requestedTags);
+            });
+        }
+
+        $leads = $query->paginate(5)->withQueryString();
+
+
+        return Inertia::render('Lead/ConvertedList', ['leads' => $leads, 'tags' => $tags, 'alreadySelectedTags' => $filterTags ? $filter['tags'] : []]);
+    }
+
     public function show(Request $request, Lead $lead): Response
     {
         if($request->user()->id != $lead->user_id){

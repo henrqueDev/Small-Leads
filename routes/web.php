@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\InteractionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -41,7 +42,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/leads-create', [LeadController::class, 'create'])->middleware(['auth', 'verified'])->name('leads.create');
 Route::post('/leads-store', [LeadController::class, 'store'])->middleware(['auth', 'verified'])->name('leads.store');
 Route::get('/leads-list', [LeadController::class, 'list'])->middleware(['auth', 'verified'])->name('leads.list');
-Route::get('/leads-converted-list', [LeadController::class, 'converted-list'])->middleware(['auth', 'verified'])->name('leads.converted.list');
+Route::get('/leads-converted-list', [LeadController::class, 'listConverted'])->middleware(['auth', 'verified'])->name('leads.converted.list');
 Route::get('/leads-show/{lead}', [LeadController::class, 'show'])->middleware(['auth', 'verified'])->name('leads.show');
 Route::get('/leads-edit/{lead}', [LeadController::class, 'edit'])->middleware(['auth', 'verified'])->name('leads.edit');
 Route::patch('/leads-update/{lead}', [LeadController::class, 'update'])->middleware(['auth', 'verified'])->name('leads.update');
@@ -51,6 +52,12 @@ Route::get('/tags-list', [TagController::class, 'list'])->middleware(['auth', 'v
 Route::post('/tags-store', [TagController::class, 'store'])->middleware(['auth', 'verified'])->name('tags.store');
 Route::patch('/tags-update/{tag}', [TagController::class, 'update'])->middleware(['auth', 'verified'])->name('tags.update');
 Route::delete('/tags-destroy/{tag}', [TagController::class, 'destroy'])->middleware(['auth', 'verified'])->name('tags.destroy');
+
+Route::get('/companies-list', [CompanyController::class, 'list'])->middleware(['auth', 'verified'])->name('companies.list');
+Route::post('/companies-store', [CompanyController::class, 'store'])->middleware(['auth', 'verified'])->name('companies.store');
+Route::patch('/companies-update/{company}', [CompanyController::class, 'update'])->middleware(['auth', 'verified'])->name('companies.update');
+Route::delete('/companies-destroy/{company}', [CompanyController::class, 'destroy'])->middleware(['auth', 'verified'])->name('companies.destroy');
+
 
 Route::get('/interactions-create/{lead}', [InteractionController::class, 'create'])->middleware(['auth', 'verified'])->name('interactions.create');
 Route::post('/interactions-store', [InteractionController::class, 'store'])->middleware(['auth', 'verified'])->name('interactions.store');

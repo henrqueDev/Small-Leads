@@ -247,8 +247,7 @@ onMounted(() => {
         
       </div>
 
-      <div class="mt-2 ml-3">
-          <InputLabel for="tags" value="Tags" />
+      <div class="mt-2 mb-4">
           <CheckBoxTagsFilter
             id="tags"
             @tagSelected="(tagsSelected) => loadTagsSelected(tagsSelected)"

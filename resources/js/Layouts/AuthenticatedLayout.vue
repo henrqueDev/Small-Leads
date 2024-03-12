@@ -43,6 +43,20 @@ const showingNavigationDropdown = ref(false);
                                     Leads
                                 </NavLink>
                             </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink :href="route('leads.converted.list')" :active="route().current('leads.converted.list')">
+                                    Leads Converted
+                                </NavLink>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink :href="route('companies.list')" :active="route().current('companies.list')">
+                                    Companies
+                                </NavLink>
+                            </div>
+
+
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">

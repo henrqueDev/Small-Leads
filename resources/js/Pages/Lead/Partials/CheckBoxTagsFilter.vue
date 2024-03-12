@@ -129,7 +129,7 @@ watch(searchQuery, handleSearch);
     </ul>
     <a
       :href="route('tags.list')"
-      class="flex items-center p-3 text-sm font-medium text-gray-1000 border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white-500 hover:underline"
+      class="flex items-center p-3 text-sm font-medium text-gray-300 border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white-500 hover:underline"
     >
       <svg
         class="w-4 h-4 me-2"
