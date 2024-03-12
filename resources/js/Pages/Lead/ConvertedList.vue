@@ -5,8 +5,8 @@ import { Head, usePage, router } from "@inertiajs/vue3";
 import TablePaginationFooter from "@/Components/TablePaginationFooter.vue";
 import LeadsFilter from "./Partials/LeadsFilter.vue";
 import NavLink from "@/Components/NavLink.vue";
-import AddIcon from '@/Components/AddIcon.vue';
-import FilterIcon from '@/Components/FilterIcon.vue'
+import AddIcon from "@/Components/AddIcon.vue";
+import FilterIcon from "@/Components/FilterIcon.vue";
 
 const props = defineProps({
   leads: {
@@ -68,8 +68,6 @@ const headersActive = leadsHeaders.filter((header) => {
     return header;
   }
 });
-
-
 </script>
 
 <template>
@@ -77,7 +75,7 @@ const headersActive = leadsHeaders.filter((header) => {
     <Head title="Converted Leads" />
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-       Converted Leads
+        Converted Leads
       </h2>
     </template>
 
@@ -85,7 +83,7 @@ const headersActive = leadsHeaders.filter((header) => {
       <div class="max-w-8xl mx-auto sm:px-6 lg:px-6">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-xl">
           <div class="p-3 text-gray-900 dark:text-gray-100 text-wrap overflow-x-auto">
-            <table  
+            <table
               class="w-full border table-auto border-separate border-gray-200 dark:border-gray-700 rounded-md p-2"
             >
               <thead>
@@ -126,9 +124,18 @@ const headersActive = leadsHeaders.filter((header) => {
                   </td>
 
                   <td class="text-center p-2 rounded-sm">
-                    <NavLink :href="route('leads.show', { lead: lead })"> Show </NavLink>
-
-                    <NavLink :href="route('leads.edit', { lead: lead })"> Edit </NavLink>
+                    <a
+                      class="m-3 text-center text-md col-span-1 text-gray-300 bg-gray-900 p-2 hover:bg-gray-700 duration-150 ease-in-out rounded-xl"
+                      :href="route('leads.show', { lead: lead })"
+                    >
+                      Show
+                    </a>
+                    <a
+                      class="m-3 text-center text-md col-span-1 text-gray-300 bg-gray-900 p-2 hover:bg-gray-700 duration-150 ease-in-out rounded-xl"
+                      :href="route('leads.edit', { lead: lead })"
+                    >
+                      Edit
+                    </a>
                   </td>
                 </tr>
               </tbody>
