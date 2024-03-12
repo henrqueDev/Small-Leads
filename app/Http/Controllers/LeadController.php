@@ -37,7 +37,7 @@ class LeadController extends Controller
     {
         $user = $request->user();
         $tags = $user->load('tags')->tags;
-
+        $companies = $user->load('companies')->companies;
         //dd(Lead::with('leadTags.tag')->get()[0]->leadTags[0]->tag);
         $filters = $request->query();
         
@@ -88,7 +88,7 @@ class LeadController extends Controller
         $leads = $query->paginate(5)->withQueryString();
 
 
-        return Inertia::render('Lead/List', ['leads' => $leads, 'tags' => $tags, 'alreadySelectedTags' => $filterTags ? $filter['tags'] : []]);
+        return Inertia::render('Lead/List', ['leads' => $leads, 'tags' => $tags, 'alreadySelectedTags' => $filterTags ? $filter['tags'] : [], 'companies' => $companies]);
     }
 
 

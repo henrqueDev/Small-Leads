@@ -31,7 +31,6 @@ const props = defineProps({
   },
 });
 
-const companies = ref([]);
 const selectedTags = ref(props.alreadySelectedTags);
 
 const filter = ref({
@@ -63,14 +62,6 @@ const closeModal = () => {
   emit("close");
 };
 
-const fetchData = async () => {
-  try {
-    const response = await axios.get("/api/companies");
-    companies.value = response.data;
-  } catch (error) {
-    console.error("Error fetchData: ", error);
-  }
-};
 const clearFilter = () => {
   filter.value = {
     name: "",
@@ -144,7 +135,6 @@ const loadTagsSelected = (tagsSelected) => {
 };
 
 onMounted(() => {
-  fetchData();
   filter.value = queryParams();
 });
 
@@ -248,7 +238,11 @@ watch(searchQuery, handleSearch);
             v-model="filter.company_id"
           >
             <option value=""></option>
-            <option v-for="company in companies" :value="company.id" :key="company.id">
+            <option
+              v-for="company in props.companies"
+              :value="company.id"
+              :key="company.id"
+            >
               {{ company.name }}
             </option>
           </select>

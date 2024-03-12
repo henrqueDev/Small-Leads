@@ -19,6 +19,9 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  companies: {
+    type: Array,
+  },
 });
 
 const leadsHeaders = [
@@ -110,6 +113,7 @@ const filterMethod = (filter) => {
             :show="showFilter"
             :tags="tags"
             :headers="headersActive"
+            :companies="companies"
             :alreadySelectedTags="alreadySelectedTags"
             @filter="
               (params) => {
