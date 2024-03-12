@@ -75,21 +75,14 @@ const interactionHeaders = ["Type", "Date", "Description", "Actions"];
                       @click="showModalAction(interaction.description)"
                     ><SearchIcon /></button>
                   </td>
-
                   <td class="text-center p-2 rounded-sm">
-                    <NavLink
-                      :href="route('interactions.edit', { interaction: interaction.id })"
-                    >
-                      Edit
-                    </NavLink>
 
-                    <NavLink
-                      :href="
-                        route('interactions.destroy', { interaction: interaction.id })
-                      "
-                    >
-                      Delete
-                    </NavLink>
+                    <a 
+                      class="m-3 text-center text-md col-span-1 p-3 text-gray-300 bg-gray-900 p-3  hover:bg-gray-700 duration-150 ease-in-out rounded-xl"  
+                      :href="route('interactions.edit', { interaction: interaction.id })"
+                    > 
+                      Edit 
+                    </a>
                   </td>
                 </tr>
               </tbody>

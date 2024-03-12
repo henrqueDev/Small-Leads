@@ -10,13 +10,14 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TagIcon from '@/Components/TagIcon.vue';
 import InputError from "@/Components/InputError.vue";
 
+
 const props = defineProps({
-  companies: {
+  interactionTypes: {
     type: Object,
   },
 });
 
-const companiesHeaders = ["Company", "Actions"];
+const interactionTypesHeaders = ["Type", "Actions"];
 
 const showFilter = ref(false);
 const showEdit = ref(null);
@@ -29,7 +30,7 @@ const showFilterAction = () => {
   showFilter.value = true;
 };
 
-const companiesLive = ref(props.companies.data);
+const interactionTypesLive = ref(props.interactionTypes.data);
 
 const createForm = useForm({
   name: ''
@@ -42,31 +43,33 @@ const editForm = useForm({
 });
 
 const filterMethod = (filter) => {
-  router.get(route("companies.list"), {
+  router.get(route("interactionTypes.list"), {
     filter: filter,
   });
 };
 
-const toggleEdit = (company) => {
-  showEdit.value != company.id ? (showEdit.value = company.id) : (showEdit.value = 0);
-  editForm.id = company.id;
-  editForm.name = company.name;
+const toggleEdit = (interactionType) => {
+  showEdit.value != interactionType.id ? (showEdit.value = interactionType.id) : (showEdit.value = 0);
+  editForm.id = interactionType.id;
+  editForm.name = interactionType.name;
 };
 
-const toggleCreate = (company) => {
+const toggleCreate = (interactionType) => {
   showCreate.value = !showCreate.value;
 };
 
-const createCompany = async () => {
-  await createForm.post(route("companies.store"))
-  
+const createInteractionType = async () => {
+  await createForm.post(route("interactionTypes.store"));
+
 }
 
-const editCompany = async () => {
-  await editForm.patch(route("companies.update", { company: editForm.id }));
+const editInteractionType = async () => {
+  await editForm.patch(route("interactionTypes.update", { interactionType: editForm.id }));
+  /*
+  */
 };
 
-const deleteTag = (company) => {
+const deleteInteractionType = (interactionType) => {
   Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to revert this!",
@@ -77,7 +80,7 @@ const deleteTag = (company) => {
     reverseButtons: true
   }).then((result) => {
     if (result.isConfirmed) {
-      router.delete(route("companies.destroy", { company: company.id }));
+      router.delete(route("interactionTypes.destroy", { interactionType: interactionType.id }));
     }
   });
   
@@ -86,10 +89,10 @@ const deleteTag = (company) => {
 
 <template>
   <AuthenticatedLayout>
-    <Head title="companies" />
+    <Head title="Interaction Types" />
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 companying-tight">
-        Companies
+      <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 taging-tight">
+        Interaction Types
       </h2>
     </template>
 
@@ -98,31 +101,32 @@ const deleteTag = (company) => {
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
           <div class="w-full grid grid-cols-9 grid-rows-1 h-full justify-end">
             <h2
-              class="m-5 p-3 font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight col-span-7"
+              class="m-5 p-3 font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight col-span-8"
             >
-              Companies
+              Interaction Types
             </h2>
             
-            <button class="m-3  text-md col-span-2 p-3 text-gray-300 bg-gray-900 p-3  hover:bg-gray-700 duration-150 ease-in-out rounded-xl" @click="toggleCreate()">
+            <button class="m-3  text-md col-span-1 p-3 text-gray-300 bg-gray-900 p-3  hover:bg-gray-700 duration-150 ease-in-out rounded-xl" @click="toggleCreate()">
              
-              <TagIcon class="mt-3 text-center w-full " />
-              <span class="text-xs">Create company</span>
+              <TagIcon class="mt-3 text-center w-full text-xs" />
+              <span class="text-xs">Create</span>
             </button>
 
           </div>
           <div class="m-5" v-if="showCreate == true">
-                      <InputLabel for="new_company_name" value="New company name"></InputLabel>
+                      <InputLabel for="new_tag_name" value="New Interaction Type name"></InputLabel>
                       <TextInput
-                        id="new_company_name"
+                        id="new_tag_name"
                         v-model="createForm.name"
                         class="text-center text-xl bg-white border border-gray-200 rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-800"
                       ></TextInput>
                       <button
                         class="ml-2 p-3 bg-green-600 rounded-md col-span-2 hover:bg-green-600 duration-150 ease-in-out"
-                        @click="createCompany()"
+                        @click="createInteractionType()"
                       >
                         Create
                       </button>
+                      
                       <InputError class="mt-2" :message="createForm.errors.name" />
           </div>
           <div class="p-3 text-gray-900 dark:text-gray-100">
@@ -131,36 +135,37 @@ const deleteTag = (company) => {
             >
               <thead>
                 <tr
-                  class="font-semibold text-xl text-gray-800 dark:text-gray-200 companying-tight"
+                  class="font-semibold text-xl text-gray-800 dark:text-gray-200 taging-tight"
                 >
-                  <th class="px-4 py-2 text-start" v-for="header in companiesHeaders"></th>
+                  <th class="px-4 py-2 text-start" v-for="header in interactionTypesHeaders"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   class="grid grid-cols-8 grid-rows-1 mb-5"
-                  v-for="(company, i) in companies.data"
+                  v-for="(interactionType, i) in interactionTypes.data"
                   :key="i"
                 >
                   <td class="mt-5 text-start ml-1 col-span-6">
                     <span
                       class="border dark:border-white-500 cursor-pointer bg-opacity-0 m-3 px-4 text-md font-medium text-start text-white bg-blue-100 rounded-lg outline-none hover:bg-blue-100 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-1000 dark:hover:bg-white-500 dark:hover:text-gray-900 dark:focus:ring-blue-800 duration-150 ease-in-out"
                     >
-                      {{ company.name }}
+                      {{ interactionType.name }}
                     </span>
-                    <div class="mt-3" v-if="showEdit == company.id">
-                      <InputLabel for="new_company_name" value="New company name"></InputLabel>
+                    <div class="mt-3" v-if="showEdit == interactionType.id">
+                      <InputLabel for="new_tag_name" value="New Interaction Type name"></InputLabel>
                       <TextInput
-                        id="new_company_name"
+                        id="new_tag_name"
                         v-model="editForm.name"
                         class="text-center text-xl bg-white border border-gray-200 rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-800"
                       ></TextInput>
                       <button
                         class="ml-2 p-3 bg-green-600 rounded-md col-span-2 hover:bg-green-600 duration-150 ease-in-out"
-                        @click="editCompany()"
+                        @click="editInteractionType()"
                       >
                         Save
                       </button>
+                      
                       
                       <InputError class="mt-2" :message="editForm.errors.name" />
                     </div>
@@ -168,14 +173,14 @@ const deleteTag = (company) => {
                   <td class="mt-2 col-span-2">
                     <button
                       class="p-3 bg-gray-900 rounded-md col-span-2 hover:bg-gray-700 duration-150 ease-in-out"
-                      @click="toggleEdit(company)"
+                      @click="toggleEdit(interactionType)"
                     >
                       Edit
                     </button>
 
                     <button
                       class="ml-2 p-3 bg-gray-900 text-red-500 rounded-md col-span-2 hover:bg-gray-700 duration-150 ease-in-out"
-                      @click="deleteTag(company)"
+                      @click="deleteInteractionType(interactionType)"
                     >
                       Delete
                     </button>

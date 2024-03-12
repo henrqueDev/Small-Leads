@@ -8,8 +8,10 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Lead;
-use App\Http\Requests\Interaction\InteractionRequest;
+use App\Http\Requests\Interaction\CreateInteractionRequest;
+use App\Http\Requests\Interaction\DestroyInteractionRequest;
 
+use App\Http\Requests\Interaction\EditInteractionRequest;
 use App\Http\Requests\Interaction\UpdateInteractionRequest;
 
 use Illuminate\Support\Facades\Redirect;
@@ -38,7 +40,7 @@ class InteractionController extends Controller
     }
 
 
-    public function store(InteractionRequest $request): RedirectResponse 
+    public function store(CreateInteractionRequest $request): RedirectResponse 
     {
         $request->validated();
 
@@ -57,7 +59,7 @@ class InteractionController extends Controller
         return Redirect::route('leads.show', ["lead" => $lead]);
     }
 
-    public function edit(Request $request, Interaction $interaction): Response
+    public function edit(EditInteractionRequest $request, Interaction $interaction): Response
     {
         $user = $request->user();
         $lead = $interaction->lead;
@@ -94,8 +96,6 @@ class InteractionController extends Controller
             $newInteractionType = InteractionType::create(['name' => $request->new_interaction_type, 'user_id' => $request->user()->id]);
             $data['interaction_type_id'] = $newInteractionType->id;
         }
-
-        
         
         $interaction->update($data);
 
@@ -103,7 +103,7 @@ class InteractionController extends Controller
        return Redirect::route('leads.show', ['lead' => $lead->id]);
     }
 
-    public function destroy(Request $request, Interaction $interaction): RedirectResponse
+    public function destroy(DestroyInteractionRequest $request, Interaction $interaction): RedirectResponse
     {
         $interaction->delete();
         return Redirect::route('leads.show', ['lead' => $interaction->lead_id]);

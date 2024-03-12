@@ -13,6 +13,9 @@ use App\Http\Requests\Tag\UpdateTagRequest;
 
 use App\Http\Requests\Tag\CreateTagRequest;
 
+
+use App\Http\Requests\Tag\DestroyTagRequest;
+
 use App\Models\Tag;
 
 class TagController extends Controller
@@ -41,7 +44,7 @@ class TagController extends Controller
        return Redirect::route('tags.list');
     }
 
-    public function destroy(Request $request, Tag $tag): RedirectResponse {
+    public function destroy(DestroyTagRequest $request, Tag $tag): RedirectResponse {
         $tag->delete();
         return Redirect::route('tags.list');
     }

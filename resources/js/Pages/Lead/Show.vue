@@ -108,8 +108,13 @@ const showModalAction = (description) => {
                       {{ lead_tag.tag.name }}
                     </div>
                   </td>
-                  <td class="text-center p-2 rounded-sm">
-                    <NavLink :href="route('leads.edit', { lead: lead })"> Edit </NavLink>
+                  <td class="text-center rounded-sm">
+                    <a 
+                      class="m-3 text-center text-md col-span-1 text-gray-300 bg-gray-900 p-2 hover:bg-gray-700 duration-150 ease-in-out rounded-xl"  
+                      :href="route('leads.edit', { lead: lead })"
+                    > 
+                       Edit 
+                    </a>
                   </td>
                 </tr>
               </tbody>
@@ -167,9 +172,19 @@ const showModalAction = (description) => {
 
                   <td class="text-center p-2 rounded-sm">
                     
-                    <NavLink :href="route('interactions.show', { interaction: interaction.id })"> Show </NavLink>
+                    <a 
+                      class="m-3 text-center text-md col-span-1 p-3 text-gray-300 bg-gray-900 p-3  hover:bg-gray-700 duration-150 ease-in-out rounded-xl" 
+                      :href="route('interactions.show', { interaction: interaction.id })"
+                    > 
+                        Show 
+                    </a>
 
-                    <NavLink :href="route('interactions.edit', { interaction: interaction.id })"> Edit </NavLink>
+                    <a 
+                      class="m-3 text-center text-md col-span-1 p-3 text-gray-300 bg-gray-900 p-3  hover:bg-gray-700 duration-150 ease-in-out rounded-xl"  
+                      :href="route('interactions.edit', { interaction: interaction.id })"
+                    > 
+                      Edit 
+                    </a>
                   </td>
 
                 </tr>

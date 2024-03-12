@@ -5,6 +5,8 @@ use App\Http\Controllers\LeadController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\InteractionController;
+
+use App\Http\Controllers\InteractionTypeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -58,7 +60,6 @@ Route::post('/companies-store', [CompanyController::class, 'store'])->middleware
 Route::patch('/companies-update/{company}', [CompanyController::class, 'update'])->middleware(['auth', 'verified'])->name('companies.update');
 Route::delete('/companies-destroy/{company}', [CompanyController::class, 'destroy'])->middleware(['auth', 'verified'])->name('companies.destroy');
 
-
 Route::get('/interactions-create/{lead}', [InteractionController::class, 'create'])->middleware(['auth', 'verified'])->name('interactions.create');
 Route::post('/interactions-store', [InteractionController::class, 'store'])->middleware(['auth', 'verified'])->name('interactions.store');
 Route::get('/interactions-list', [InteractionController::class, 'list'])->middleware(['auth', 'verified'])->name('interactions.list');
@@ -66,6 +67,12 @@ Route::get('/interactions-show/{interaction}', [InteractionController::class, 's
 Route::get('/interactions-edit/{interaction}', [InteractionController::class, 'edit'])->middleware(['auth', 'verified'])->name('interactions.edit');
 Route::patch('/interactions-update/{interaction}', [InteractionController::class, 'update'])->middleware(['auth', 'verified'])->name('interactions.update');
 Route::delete('/interactions-destroy/{interaction}', [InteractionController::class, 'destroy'])->middleware(['auth', 'verified'])->name('interactions.destroy');
+
+Route::get('/interaction-types-list', [InteractionTypeController::class, 'list'])->middleware(['auth', 'verified'])->name('interactionTypes.list');
+Route::post('/interaction-types-store', [InteractionTypeController::class, 'store'])->middleware(['auth', 'verified'])->name('interactionTypes.store');
+Route::patch('/interaction-types-update/{interactionType}', [InteractionTypeController::class, 'update'])->middleware(['auth', 'verified'])->name('interactionTypes.update');
+Route::delete('/interaction-types-destroy/{interactionType}', [InteractionTypeController::class, 'destroy'])->middleware(['auth', 'verified'])->name('interactionTypes.destroy');
+
 
 
 require __DIR__.'/auth.php';

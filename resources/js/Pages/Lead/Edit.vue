@@ -51,12 +51,15 @@ const form = useForm({
 console.log(form.tags);
 
 watch(company_not_found, () => {
-  if (company_not_found == true) {
     form.company_id = null;
-  } else {
     form.new_company = "";
-  }
 });
+
+watch(form, () => {
+  if(form.converted == false) {
+    form.is_paying = false;
+  }
+})
 
 const updateLead = () => {
   form.patch(route("leads.update", { lead: form.id }));
@@ -67,10 +70,7 @@ const toggleTagForm = () => {
 };
 
 const loadTagsSelected = (tagsSelected) => {
-  console.log(tagsSelected);
   form.tags = Object.entries(tagsSelected).map(([key, value]) => value);
-
-  console.log(form.tags);
 };
 
 const deleteLead = () => {
@@ -92,9 +92,11 @@ const deleteLead = () => {
 
 <template>
   <AuthenticatedLayout>
+  
+    <Head title="Edit Lead" />
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-        Create lead
+        Edit lead
       </h2>
     </template>
 

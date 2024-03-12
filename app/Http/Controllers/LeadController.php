@@ -78,7 +78,7 @@ class LeadController extends Controller
             }
             else if($field === 'order'){
                 if(array_key_exists('orderBy', $value)){
-                    if(in_array($value['orderBy'], ['name', 'email', 'phone'])){
+                    if(in_array($value['orderBy'], ['name', 'email', 'phone', 'is_paying', 'converted'])){
                         $query->orderBy($value['orderBy'], $value['orderDesc'] === 'true' ? 'desc' : 'asc' );
                     }
                 }

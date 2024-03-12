@@ -18,14 +18,11 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        User::factory()->count(3)->has(
-            Company::factory()->count(2)->has(
-                Lead::factory()->count(3)
-                ),
-            
-        )->has(Tag::factory()->count(4))->create([
-            'password' => env('TEST_USERS_PASSWORD')
-        ]);
+        User::factory()->count(3)->create();
 
+        Company::factory()->count(3)->has(
+            Lead::factory()->count(3)
+        )->create();
+        
     }
 }

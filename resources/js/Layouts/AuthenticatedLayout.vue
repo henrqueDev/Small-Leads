@@ -46,13 +46,25 @@ const showingNavigationDropdown = ref(false);
 
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('leads.converted.list')" :active="route().current('leads.converted.list')">
-                                    Leads Converted
+                                   Converted Leads 
                                 </NavLink>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('companies.list')" :active="route().current('companies.list')">
                                     Companies
+                                </NavLink>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink :href="route('tags.list')" :active="route().current('tags.list')">
+                                    Tags
+                                </NavLink>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink :href="route('interactionTypes.list')" :active="route().current('interactionTypes.list')">
+                                    Interaction Types
                                 </NavLink>
                             </div>
 

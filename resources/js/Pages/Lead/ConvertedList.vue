@@ -74,10 +74,10 @@ const headersActive = leadsHeaders.filter((header) => {
 
 <template>
   <AuthenticatedLayout>
-    <Head title="Leads" />
+    <Head title="Converted Leads" />
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-        Leads
+       Converted Leads
       </h2>
     </template>
 

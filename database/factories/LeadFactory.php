@@ -24,6 +24,7 @@ class LeadFactory extends Factory
             'email' => fake()->email(),
             'phone' => fake()->phoneNumber(),
             'converted' => false,
+            'is_paying' => false,
             'user_id' => static::$user_id ??= 1,
             'company_id' => static::$company_id ??= 1
         ];

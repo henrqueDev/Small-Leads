@@ -11,7 +11,6 @@ class UpdateInteractionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-
         $authorize = $this->interaction->user_id == $this->user()->id ? true : false;
         return $authorize;
     }

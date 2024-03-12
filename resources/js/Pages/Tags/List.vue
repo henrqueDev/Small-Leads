@@ -8,6 +8,8 @@ import TextInput from "@/Components/TextInput.vue";
 import TablePaginationFooter from "@/Components/TablePaginationFooter.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TagIcon from '@/Components/TagIcon.vue';
+import InputError from "@/Components/InputError.vue";
+
 
 const props = defineProps({
   tags: {
@@ -53,24 +55,16 @@ const toggleEdit = (tag) => {
 };
 
 const toggleCreate = (tag) => {
-  showEdit.value = null;
   showCreate.value = !showCreate.value;
 };
 
 const createTag = async () => {
   await createForm.post(route("tags.store"));
-  Swal.fire({
-   position: "top-end",
-              icon: 'success',
-              title: `Tag created sucessfully`,
-              showConfirmButton: false,
-              timer: 1500
-  });
+
 }
 
 const editTag = async () => {
   await editForm.patch(route("tags.update", { tag: editForm.id }));
-  showEdit.value = 0;
   /*
   */
 };
@@ -87,13 +81,6 @@ const deleteTag = (tag) => {
   }).then((result) => {
     if (result.isConfirmed) {
       router.delete(route("tags.destroy", { tag: tag.id }));
-      Swal.fire({
-        position: "top-end",
-                    icon: 'success',
-                    title: `Tag ${tag.name} deleted!`,
-                    showConfirmButton: false,
-                    timer: 1500
-        })
     }
   });
   
@@ -139,6 +126,8 @@ const deleteTag = (tag) => {
                       >
                         Create
                       </button>
+                      
+                      <InputError class="mt-2" :message="createForm.errors.name" />
           </div>
           <div class="p-3 text-gray-900 dark:text-gray-100">
             <table
@@ -176,6 +165,9 @@ const deleteTag = (tag) => {
                       >
                         Save
                       </button>
+                      
+                      
+                      <InputError class="mt-2" :message="editForm.errors.name" />
                     </div>
                   </td>
                   <td class="mt-2 col-span-2">

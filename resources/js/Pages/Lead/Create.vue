@@ -62,6 +62,8 @@ const loadTagsSelected = (tagsSelected) => {
 
 <template>
   <AuthenticatedLayout>
+  
+    <Head title="Create Lead" />
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
         Create lead

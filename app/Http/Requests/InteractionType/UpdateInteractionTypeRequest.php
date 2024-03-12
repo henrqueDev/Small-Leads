@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Requests\Tag;
+namespace App\Http\Requests\InteractionType;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Lead;
 
-class UpdateTagRequest extends FormRequest
+class UpdateInteractionTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
-    {    
-        $authorize = $this->tag->user_id == $this->user()->id ? true : false;
+    {
+        $authorize = $this->interactionType->user_id == $this->user()->id ? true : false;
         return $authorize;
     }
 
@@ -20,11 +21,13 @@ class UpdateTagRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+
+    public function rules()
     {
         return [
             'id' => 'required',
-            'name' => 'required|unique:tags',
+            'name' => 'required|unique:interaction_types'
         ];
     }
+
 }
