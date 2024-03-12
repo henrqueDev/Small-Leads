@@ -145,8 +145,6 @@ const showModalAction = (description) => {
                     <NavLink :href="route('interactions.show', { interaction: interaction.id })"> Show </NavLink>
 
                     <NavLink :href="route('interactions.edit', { interaction: interaction.id })"> Edit </NavLink>
-
-                    <NavLink :href="route('interactions.destroy', { interaction: interaction.id })"> Delete </NavLink>
                   </td>
 
                 </tr>
