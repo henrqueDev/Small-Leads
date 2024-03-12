@@ -1,5 +1,4 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -10,7 +9,7 @@ import CheckBoxDropDown from "@/Pages/Lead/Partials/CheckBoxDropDown.vue";
 import AddIcon from "@/Components/AddIcon.vue";
 import DangerButton from '@/Components/DangerButton.vue';
 import Swal from 'sweetalert2';
-
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 const props = defineProps({
   tags: {
     type: Object,
@@ -24,18 +23,11 @@ const props = defineProps({
     type: Object,
     required: false,
   },
-});
-
-const companies = ref([]);
-
-async function fetchData() {
-  try {
-    const response = await axios.get("/api/companies");
-    companies.value = response.data;
-  } catch (error) {
-    console.error("Error fetching mineral log data:", error);
+  companies: {
+    type: Array,
+    required: false
   }
-}
+});
 
 const tags = ref(Object.entries(props.tags).map(([key, value]) => value));
 const company_not_found = ref(false);
@@ -56,7 +48,6 @@ const form = useForm({
 });
 
 console.log(form.tags);
-onMounted(fetchData);
 
 watch(company_not_found, () => {
   if (company_not_found == true) {
@@ -82,21 +73,20 @@ const loadTagsSelected = (tagsSelected) => {
 };
 
 const deleteLead = () => {
-
-Swal.fire({
-  title: "Are you sure?",
-  text: "You won't be able to revert this!",
-  icon: "warning",
-  showCancelButton: true,
-  confirmButtonText: "Yes, delete it!",
-  cancelButtonText: "No, cancel!",
-  reverseButtons: true
-}).then((result) => {
-  if (result.isConfirmed) {
-    router.delete(route("leads.destroy", { lead: props.lead.id }));
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "No, cancel!",
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      router.delete(route("leads.destroy", { lead: props.lead.id }));
+    }
+  });
   }
-});
-}
 </script>
 
 <template>

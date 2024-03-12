@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Lead;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class InteractionRequest extends FormRequest
+class LeadRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,16 +19,15 @@ class InteractionRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-
-    public function rules()
+    public function rules(): array
     {
         return [
-            'description' => 'required',
-            'event_date' => 'required',
-            'lead_id' => 'required',
-            "interaction_type_id" => "required_without:new_interaction_type",
-            "new_interaction_type" => "required_without:interaction_type_id"
+            "name" => "required",
+            "last_name" => "required",
+            "email" => "required",
+            "phone" => "required",
+            "company_id" => "required_without:new_company",
+            "new_company" => "required_without:company_id"
         ];
     }
-
 }

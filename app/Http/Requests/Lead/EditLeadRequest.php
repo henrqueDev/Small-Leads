@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Lead;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LeadRequest extends FormRequest
+class EditLeadRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
-    {
-        return true;
+    {   
+        $authorize = $this->lead->user_id == $this->user()->id ? true : false;
+        return $authorize;
     }
 
     /**
@@ -21,13 +22,6 @@ class LeadRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            "name" => "required",
-            "last_name" => "required",
-            "email" => "required",
-            "phone" => "required",
-            "company_id" => "required_without:new_company",
-            "new_company" => "required_without:company_id"
-        ];
+        return [];
     }
 }

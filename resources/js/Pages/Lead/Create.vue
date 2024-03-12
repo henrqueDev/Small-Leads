@@ -8,24 +8,21 @@ import { ref, onMounted, computed, watch, defineProps } from "vue";
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
 import CheckBoxDropDown from "@/Pages/Lead/Partials/CheckBoxDropDown.vue";
 import AddIcon from "@/Components/AddIcon.vue";
+
 const props = defineProps({
   tags: {
     type: Object,
     required: false,
   },
+  companies: {
+    type: Array,
+    required: false
+  }
 });
 
-const companies = ref([]);
-async function fetchData() {
-  try {
-    const response = await axios.get("/api/companies");
-    companies.value = response.data;
-  } catch (error) {
-    console.error("Error fetching mineral log data:", error);
-  }
-}
+
 const tags = ref(Object.entries(props.tags).map(([key, value]) => value));
-console.log(tags.value);
+
 const company_not_found = ref(false);
 
 const form = useForm({
@@ -38,7 +35,6 @@ const form = useForm({
   tags: [],
 });
 
-onMounted(fetchData);
 
 watch(company_not_found, () => {
   if (company_not_found.value == true) {

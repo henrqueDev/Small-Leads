@@ -9,7 +9,10 @@ use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 
-use App\Http\Requests\TagRequest;
+use App\Http\Requests\Tag\UpdateTagRequest;
+
+use App\Http\Requests\Tag\CreateTagRequest;
+
 use App\Models\Tag;
 
 class TagController extends Controller
@@ -28,12 +31,10 @@ class TagController extends Controller
        return Inertia::render('Tags/List', ['tags' => $tags]);
     }
 
-    public function update(Request $request, Tag $tag): RedirectResponse
+    public function update(UpdateTagRequest $request, Tag $tag): RedirectResponse
     {
-        //$user = $request->user();
-        //dd($request->new_tag_name);
         $tag->update([
-            'name' => $request->new_tag_name
+            'name' => $request->name
         ]);
 
 
@@ -45,9 +46,11 @@ class TagController extends Controller
         return Redirect::route('tags.list');
     }
 
-    public function store(TagRequest $request): RedirectResponse 
+    public function store(CreateTagRequest $request): RedirectResponse 
     {
-
+        $data = $request->all();
+        $data['user_id'] = $request->user()->id;
+        Tag::create($data);
         return Redirect::route('tags.list');
     }
 }

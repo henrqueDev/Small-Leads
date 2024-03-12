@@ -6,6 +6,8 @@ import TablePaginationFooter from "@/Components/TablePaginationFooter.vue";
 import LeadsFilter from "./Partials/LeadsFilter.vue";
 import moment from 'moment';
 import NavLink from "@/Components/NavLink.vue";
+import SearchIcon from '@/Components/SearchIcon.vue';
+import ModalDescription from '@/Pages/Interactions/Partials/ModalDescription.vue';
 
 const props = defineProps({
   lead: {
@@ -31,8 +33,17 @@ const leadsHeaders = [
 const interactionHeaders = [
   'Type',
   'Date',
+  'Description',
   'Actions'
 ]
+
+
+const showModal = ref(false);
+const showModalDescription = ref('');
+const showModalAction = (description) => {
+  showModal.value = true;
+  showModalDescription.value = description
+};
 
 
 </script>
@@ -49,6 +60,7 @@ const interactionHeaders = [
     <div class="py-12">
       <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+          <ModalDescription :show="showModal" :description="showModalDescription" @close="showModal=false" />
           <div class="p-3 text-gray-900 dark:text-gray-100">
             <table
               class="w-full border border-separate border-gray-200 dark:border-gray-700 rounded-md p-2"
@@ -122,6 +134,16 @@ const interactionHeaders = [
                   <td class="text-center p-2 rounded-sm">{{ moment(interaction.event_date).format('MM/DD/YYYY')  }}</td>
 
                   <td class="text-center p-2 rounded-sm">
+                    <button
+                      class="m-3 text-md col-span-1 p-3 text-white bg-gray-900 p-3 hover:bg-gray-700 duration-150 ease-in-out rounded-xl"
+                      @click="showModalAction(interaction.description)"
+                    ><SearchIcon /></button>
+                  </td>
+
+                  <td class="text-center p-2 rounded-sm">
+                    
+                    <NavLink :href="route('interactions.show', { interaction: interaction.id })"> Show </NavLink>
+
                     <NavLink :href="route('interactions.edit', { interaction: interaction.id })"> Edit </NavLink>
 
                     <NavLink :href="route('interactions.destroy', { interaction: interaction.id })"> Delete </NavLink>

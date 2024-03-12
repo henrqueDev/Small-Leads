@@ -9,13 +9,16 @@ use Inertia\Response;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Lead;
-use App\Http\Requests\LeadRequest;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\Company;
 
 use App\Models\Tag;
 use App\Models\LeadTag;
-use App\Http\Requests\EditLeadRequest;
+
+use App\Http\Requests\Lead\LeadRequest;
+use App\Http\Requests\Lead\EditLeadRequest;
+use App\Http\Requests\Lead\UpdateLeadRequest;
+use App\Http\Requests\Lead\DestroyLeadRequest;
 
 class LeadController extends Controller
 {
@@ -25,7 +28,9 @@ class LeadController extends Controller
     {
         $user = $request->user();
         $tags = Tag::all()->where('user_id', $user->id);
-        return Inertia::render('Lead/Create', ['tags' => $tags]);
+        $companies = Company::all()->where('user_id', $user->id);
+
+        return Inertia::render('Lead/Create', ['tags' => $tags, 'companies' => $companies]);
     }
 
     public function list(Request $request): Response
@@ -80,8 +85,6 @@ class LeadController extends Controller
             }
         }
 
-        //$query->orderBy(array_key_exists('filter', $filters) ? $filters['filter'] : '', 'asc');
-
         $leads = $query->paginate(5)->withQueryString();
 
 
@@ -127,16 +130,22 @@ class LeadController extends Controller
         return Redirect::route('leads.show', ['lead' => $lead->id]);
     }
 
-    public function edit(Request $request, Lead $lead): Response
+    public function edit(EditLeadRequest $request, Lead $lead): Response
     {
         $user = $request->user();
         $tags = Tag::all()->where('user_id', $user->id);
+
+        
+        $companies = Company::all()->where('user_id', $user->id);
+
+
+
         $leadTags = $lead->leadTags->load(['tag']);
 
-        return Inertia::render('Lead/Edit', ['lead' => $lead, 'tags' => $tags, 'leadTags' => $leadTags]);
+        return Inertia::render('Lead/Edit', ['lead' => $lead, 'tags' => $tags, 'leadTags' => $leadTags, 'companies' => $companies]);
     }
 
-    public function update(EditLeadRequest $request, Lead $lead): RedirectResponse
+    public function update(UpdateLeadRequest $request, Lead $lead): RedirectResponse
     {
         $user = $request->user();
 
@@ -146,17 +155,11 @@ class LeadController extends Controller
         $data['user_id'] = $request->user()->id;
         
 
-        
-
-        //dd($lead->load('leadTags')->leadTags->load('tag'));
-        //dd($data['tags']);  
         if($request->new_company && ($request->new_company != '' || $request->new_company != null)){
             $newCompany = Company::create(['name' => $request->new_company, 'user_id' => $request->user()->id]);
             //echo($newCompany->id);
             $data['company_id'] = $newCompany->id;
         }
-
-    
 
         if($data['tags'] || $lead->load('leadTags')->leadTags){
             $tags = $data['tags'];

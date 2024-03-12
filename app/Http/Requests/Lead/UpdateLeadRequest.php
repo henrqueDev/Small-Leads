@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Lead;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EditLeadRequest extends FormRequest
+class UpdateLeadRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
-    {
-        return true;
+    {   
+        $authorize = $this->lead->user_id == $this->user()->id ? true : false;
+        return $authorize;
     }
 
     /**

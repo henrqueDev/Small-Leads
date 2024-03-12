@@ -8,7 +8,10 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Lead;
-use App\Http\Requests\InteractionRequest;
+use App\Http\Requests\Interaction\InteractionRequest;
+
+use App\Http\Requests\Interaction\UpdateInteractionRequest;
+
 use Illuminate\Support\Facades\Redirect;
 use App\Models\Company;
 
@@ -64,7 +67,17 @@ class InteractionController extends Controller
         return Inertia::render('Interactions/Edit', ['interaction' => $interaction, 'lead' => $lead, 'user' => $user, 'interaction_types' => $interactionTypes]);
     }
 
-    public function update(InteractionRequest $request, Interaction $interaction): RedirectResponse
+    public function show(Request $request, Interaction $interaction): Response
+    {
+        $user = $request->user();
+        $lead = $interaction->lead;
+
+        $interaction = $interaction->load(['interactionType']);
+
+        return Inertia::render('Interactions/Show', ['interaction' => $interaction, 'lead' => $lead]);
+    }
+
+    public function update(UpdateInteractionRequest $request, Interaction $interaction): RedirectResponse
     {   
         $request->validated();
 

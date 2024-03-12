@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Lead;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TagRequest extends FormRequest
+class DestroyLeadRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
-    {
-        return true;
+    {   
+        $authorize = $this->lead->user_id == $this->user()->id ? true : false;
+        return $authorize;
     }
 
     /**
@@ -21,8 +22,6 @@ class TagRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 }
