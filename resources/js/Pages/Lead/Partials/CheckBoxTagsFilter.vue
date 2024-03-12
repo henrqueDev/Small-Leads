@@ -8,15 +8,17 @@ const props = defineProps({
   },
   alreadySelectedTags: {
     type: Array,
-    required: false,
-    default: () => [],
   },
 });
-console.log(props.tags);
+
 const isOpen = ref(false);
+console.log(props.alreadySelectedTags);
 const tagsSelected = ref(props.alreadySelectedTags);
 const searchQuery = ref("");
 const tagsFiltered = ref(props.tags);
+
+console.log(tagsSelected.value);
+
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
 };
@@ -35,11 +37,11 @@ const handleSearch = () => {
 
 watch(tagsSelected, () => {
   let entries = props.tags;
-  //let entries = Object.entries(props.tags);
-  //console.log(entries[0][1]);
-  tagsFiltered.value = entries.filter((tag) =>
+
+  /*tagsFiltered.value = entries.filter((tag) =>
     tag.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+  );*/
+  console.log(tagsFiltered.value);
   emit("tagSelected", tagsSelected.value);
 });
 watch(searchQuery, handleSearch);
@@ -70,7 +72,7 @@ watch(searchQuery, handleSearch);
     </svg>
   </button>
 
-  <div v-show="isOpen" class="z-10  mb-4 bg-white rounded-lg shadow w-60 dark:bg-gray-700">
+  <div v-show="isOpen" class="z-10 bg-white rounded-lg shadow w-60 dark:bg-gray-700">
     <div class="p-3">
       <label for="input-group-search" class="sr-only">Search</label>
       <div class="relative">
@@ -113,7 +115,7 @@ watch(searchQuery, handleSearch);
           <input
             :id="'checkbox-tag-' + tag.id"
             type="checkbox"
-            :value="tag"
+            :value="tag.id"
             v-model="tagsSelected"
             class="w-4 h-4 block text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
           />

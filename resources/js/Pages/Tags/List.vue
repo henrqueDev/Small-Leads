@@ -64,6 +64,13 @@ const editTag = async () => {
 
 const deleteTag = async (tag) => {
   await router.delete(route("tags.destroy", { tag: tag.id }));
+  Swal.fire({
+   position: "top-end",
+              icon: 'success',
+              title: `Tag ${tag.name} deleted!`,
+              showConfirmButton: false,
+              timer: 1500
+  })
 };
 </script>
 
@@ -85,12 +92,6 @@ const deleteTag = async (tag) => {
             >
               Tags
             </h2>
-            <button
-              class="m-5 p-2 bg-white rounded-md col-span-1"
-              @click="showFilterAction()"
-            >
-              Filtro
-            </button>
           </div>
           <div class="p-3 text-gray-900 dark:text-gray-100">
             <table

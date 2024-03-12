@@ -18,7 +18,8 @@ class Lead extends Model
         'phone',
         'company_id',
         'user_id',
-        'converted'
+        'converted',
+        'is_paying'
     ];
 
     public function company() {

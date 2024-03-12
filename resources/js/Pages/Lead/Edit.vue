@@ -5,9 +5,12 @@ import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { ref, onMounted, computed, watch, defineProps } from "vue";
-import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
+import { Head, Link, useForm, usePage, router } from "@inertiajs/vue3";
 import CheckBoxDropDown from "@/Pages/Lead/Partials/CheckBoxDropDown.vue";
 import AddIcon from "@/Components/AddIcon.vue";
+import DangerButton from '@/Components/DangerButton.vue';
+import Swal from 'sweetalert2';
+
 const props = defineProps({
   tags: {
     type: Object,
@@ -46,6 +49,7 @@ const form = useForm({
   company_id: props.lead.company_id,
   new_company: "",
   converted: props.lead.converted == 1 ? true : false,
+  is_paying: props.lead.is_paying == 1 ? true : false,
   tags: props.leadTags.map((leadTag) => {
     return leadTag.tag;
   }),
@@ -76,6 +80,23 @@ const loadTagsSelected = (tagsSelected) => {
 
   console.log(form.tags);
 };
+
+const deleteLead = () => {
+
+Swal.fire({
+  title: "Are you sure?",
+  text: "You won't be able to revert this!",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonText: "Yes, delete it!",
+  cancelButtonText: "No, cancel!",
+  reverseButtons: true
+}).then((result) => {
+  if (result.isConfirmed) {
+    router.delete(route("leads.destroy", { lead: props.lead.id }));
+  }
+});
+}
 </script>
 
 <template>
@@ -192,7 +213,6 @@ const loadTagsSelected = (tagsSelected) => {
                   </select>
 
                   <InputError class="mt-2" :message="form.errors.company_id" />
-
                 </div>
                 <div class="col-span-3">
                   <label class="my-8" for="checkbox">Company not found?</label>
@@ -222,12 +242,12 @@ const loadTagsSelected = (tagsSelected) => {
                   />
 
                   <InputError class="mt-2" :message="form.errors.new_company" />
-
                 </div>
               </div>
 
-              <div class="mt-4">
-              <InputLabel
+              <div class="mt-4 inline-flex">
+                <div class="mr-5">
+                  <InputLabel
                     class="mt-1 block w-full"
                     for="converted"
                     value="Converted?"
@@ -240,18 +260,48 @@ const loadTagsSelected = (tagsSelected) => {
                     v-model="form.converted"
                     autocomplete="converted"
                   />
+                  <InputError class="mt-2" :message="form.errors.converted" />
+                </div>
+                <div class="ml-5" v-if="form.converted == true">
+                  <InputLabel
+                    class="mt-1 block w-full"
+                    for="is_paying"
+                    value="Is paying?"
+                  />
+
+                  <input
+                    id="is_paying"
+                    type="checkbox"
+                    class="my-5 ml-3 h-5 py-3 px-3 leading-tight text-gray-500 bg-white rounded-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray"
+                    v-model="form.is_paying"
+                    autocomplete="is_paying"
+                  />
+                  <InputError class="mt-2" :message="form.errors.is_paying" />
+                </div>
               </div>
+            </form>
+            
 
               <div class="flex items-center justify-center mt-4">
+                
+                 <DangerButton
+                  class="ms-1 mr-4"
+                  :class="{ 'opacity-25': form.processing }"
+                  :disabled="form.processing"
+                  @click="deleteLead()"
+                >
+                  Delete
+                </DangerButton>
+
                 <PrimaryButton
                   class="ms-1"
                   :class="{ 'opacity-25': form.processing }"
                   :disabled="form.processing"
+                  @click="updateLead()"
                 >
                   Save
                 </PrimaryButton>
               </div>
-            </form>
           </div>
         </div>
       </div>

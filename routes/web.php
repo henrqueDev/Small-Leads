@@ -44,6 +44,8 @@ Route::get('/leads-list', [LeadController::class, 'list'])->middleware(['auth', 
 Route::get('/leads-show/{lead}', [LeadController::class, 'show'])->middleware(['auth', 'verified'])->name('leads.show');
 Route::get('/leads-edit/{lead}', [LeadController::class, 'edit'])->middleware(['auth', 'verified'])->name('leads.edit');
 Route::patch('/leads-update/{lead}', [LeadController::class, 'update'])->middleware(['auth', 'verified'])->name('leads.update');
+Route::delete('/leads-destroy/{lead}', [LeadController::class, 'destroy'])->middleware(['auth', 'verified'])->name('leads.destroy');
+
 
 
 

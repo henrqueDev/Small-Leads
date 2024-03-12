@@ -15,6 +15,7 @@ use App\Models\Company;
 
 use App\Models\Tag;
 use App\Models\LeadTag;
+use App\Http\Requests\EditLeadRequest;
 
 class LeadController extends Controller
 {
@@ -30,23 +31,61 @@ class LeadController extends Controller
     public function list(Request $request): Response
     {
         $user = $request->user();
-        $tags = $user->tags();
+        $tags = $user->load('tags')->tags;
+
+        //dd(Lead::with('leadTags.tag')->get()[0]->leadTags[0]->tag);
         $filters = $request->query();
         
-        $query = $user->leads()->with('user')->with('company');
+
+        $query = $user->leads()->with('user')->with('company')->with('leadTags.tag');
+        
         $filter = array_key_exists('filter', $filters) ? $filters['filter'] : [];
+
+        
+        //dd($filter['converted'] === "false");
+
+        $filterTags = array_key_exists('tags', $filter);
+        if($filterTags){
+            $requestedTags = $filter['tags'];
+
+            $query->whereHas('leadTags', function ($query) use ($requestedTags) {
+                $query->whereIn('tag_id', $requestedTags);
+            });
+        }
+
 
         foreach ($filter as $field => $value) {
             if (in_array($field, ['name', 'email', 'phone'])) {
                 $query->where($field, 'like', '%' . $value . '%');
-            } elseif ($field === 'company_id' && is_numeric($value)) {
+            } else if ($field === 'company_id' && is_numeric($value)) {
                 $query->where('company_id', $value);
+            } else if ($field == 'situation') {
+
+                if($value['is_paying']==="true" && $value['converted'] === "true"){
+                    $query->where('is_paying', 1);
+                    $query->where('converted', 1);
+                }
+                else if ($value['converted'] === "true"){
+                    $query->where('converted', 1);
+                } else if ($value['is_paying'] === "true") {
+                    $query->where('is_paying', 1);
+                }
+            }
+            else if($field === 'order'){
+                if(array_key_exists('orderBy', $value)){
+                    if(in_array($value['orderBy'], ['name', 'email', 'phone'])){
+                        $query->orderBy($value['orderBy'], $value['orderDesc'] === 'true' ? 'desc' : 'asc' );
+                    }
+                }
             }
         }
 
+        //$query->orderBy(array_key_exists('filter', $filters) ? $filters['filter'] : '', 'asc');
+
         $leads = $query->paginate(5)->withQueryString();
-        
-        return Inertia::render('Lead/List', ['leads' => $leads, 'tags' => $tags]);
+
+
+        return Inertia::render('Lead/List', ['leads' => $leads, 'tags' => $tags, 'alreadySelectedTags' => $filterTags ? $filter['tags'] : []]);
     }
 
     public function show(Request $request, Lead $lead): Response
@@ -85,7 +124,7 @@ class LeadController extends Controller
                 LeadTag::create(['lead_id' => $lead->id, 'tag_id' => $tag['id'],  'user_id' => $data['user_id']]);
             } 
         }
-        return Redirect::route('leads.list');
+        return Redirect::route('leads.show', ['lead' => $lead->id]);
     }
 
     public function edit(Request $request, Lead $lead): Response
@@ -97,7 +136,7 @@ class LeadController extends Controller
         return Inertia::render('Lead/Edit', ['lead' => $lead, 'tags' => $tags, 'leadTags' => $leadTags]);
     }
 
-    public function update(LeadRequest $request, Lead $lead): RedirectResponse
+    public function update(EditLeadRequest $request, Lead $lead): RedirectResponse
     {
         $user = $request->user();
 
@@ -134,7 +173,12 @@ class LeadController extends Controller
 
         $lead->update($data);
 
-       return Redirect::route('tags.list');
+        return Redirect::route('leads.show', ['lead' => $lead->id]);
+    }
+
+    public function destroy(Request $request, Lead $lead) {
+        $lead->delete();
+        return Redirect::route('leads.list');
     }
 
 }

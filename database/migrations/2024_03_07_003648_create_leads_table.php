@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->unique();
             $table->boolean('converted')->default(false);
+            $table->boolean('is_paying')->default(false);
+
             $table->unsignedBigInteger('company_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
