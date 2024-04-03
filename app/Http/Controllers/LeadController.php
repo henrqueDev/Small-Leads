@@ -14,6 +14,7 @@ use App\Models\Company;
 
 use App\Models\Tag;
 use App\Models\LeadTag;
+use App\Models\User;
 
 use App\Http\Requests\Lead\LeadRequest;
 use App\Http\Requests\Lead\EditLeadRequest;
@@ -40,15 +41,77 @@ class LeadController extends Controller
         $companies = $user->load('companies')->companies;
         //dd(Lead::with('leadTags.tag')->get()[0]->leadTags[0]->tag);
         $filters = $request->query();
-        
 
-        $query = $user->leads()->with('user')->with('company')->with('leadTags.tag');
-        
+        /*
+            public static function pontosEntregaConsumidor($ordemServico, $dataInicio, $dataFim, $tecnico)
+    {
+        $pontos = Consumidor::with(
+            'ponto_entrega.instalacao.ordem_servico',
+            'ponto_entrega.equipamento.instalacao.ordem_servico',
+            'ponto_entrega.equipamento.tecnico',
+            'ponto_entrega.ponto'
+        )
+        ->when($ordemServico, function ($query, $ordensServico) {
+            $query->whereHas('ponto_entrega.equipamento.instalacao', function ($q) use ($ordensServico) {
+                $q->whereIn('ordem_servico_id', $ordensServico);
+            });
+        })
+        ->when($dataInicio, function ($query, $dataInicio) {
+            $query->where('created_at', '>=', $dataInicio);
+        })
+        ->when($dataFim, function ($query, $dataFim) {
+            $query->where('created_at', '<=', $dataFim);
+        })
+        ->when($tecnico, function ($query, $tecnico) {
+            $query->whereIn('ponto_entrega.equipamento.tecnico_id', $tecnico);
+        })
+        ->orderBy('created_at');
+
+        return $pontos;
+    }
+
+        */
+
+        //$query = $user->leads()->with('user')->with('company')->with('leadTags.tag');
+
         $filter = array_key_exists('filter', $filters) ? $filters['filter'] : [];
 
-        
-        //dd($filter['converted'] === "false");
+        $filterTags = array_key_exists('tags', $filter);
 
+        $leads_filtered = $user->leads()->with(
+            'user',
+            'company',
+            'leadTags.tag'
+        )
+        ->when($filter['name'] ?? null, function ($query, $name) {
+            $query->where('name', 'like', '%' . $name . '%');
+        })
+        ->when($filter['email'] ?? null, function ($query, $email) {
+            $query->where('email', 'like', '%' . $email . '%');
+        })
+        ->when($filter['phone'] ?? null, function ($query, $phone) {
+            $query->where('phone', 'like', '%' . $phone . '%');
+        })
+        ->when($filter['situation'] ?? null, function ($query, $situation) {
+            if($situation['is_paying']==="true" && $value['converted'] === "true"){
+                $query->where('is_paying', 1);
+                $query->where('converted', 1);
+            }
+            else if ($situation['converted'] === "true"){
+                $query->where('converted', 1);
+            } else if ($situation['is_paying'] === "true") {
+                $query->where('is_paying', 1);
+            }
+        })
+        ->when($filter['tags'] ?? null, function ($query, $tags){
+            $query->whereHas('leadTags', function ($query) use ($tags) {
+                $query->whereIn('tag_id', $tags);
+            });
+        })
+        -> orderBy('name');
+
+        //dd($filter['converted'] === "false");
+/*
         $filterTags = array_key_exists('tags', $filter);
         if($filterTags){
             $requestedTags = $filter['tags'];
@@ -88,6 +151,9 @@ class LeadController extends Controller
         $leads = $query->paginate(5)->withQueryString();
 
 
+        return Inertia::render('Lead/List', ['leads' => $leads, 'tags' => $tags, 'alreadySelectedTags' => $filterTags ? $filter['tags'] : [], 'companies' => $companies]);*/
+
+        $leads = $leads_filtered->paginate(5)->withQueryString();
         return Inertia::render('Lead/List', ['leads' => $leads, 'tags' => $tags, 'alreadySelectedTags' => $filterTags ? $filter['tags'] : [], 'companies' => $companies]);
     }
 
@@ -99,10 +165,10 @@ class LeadController extends Controller
 
         //dd(Lead::with('leadTags.tag')->get()[0]->leadTags[0]->tag);
         $filters = $request->query();
-        
+
 
         $query = $user->leads()->with('user')->with('company')->with('leadTags.tag');
-        
+
         $filter = array_key_exists('filter', $filters) ? $filters['filter'] : [];
 
         $query->where('converted', 1);
@@ -140,13 +206,13 @@ class LeadController extends Controller
         return Inertia::render('Lead/Show', ['lead' => $lead, 'tags' => $tags, 'interactions' => $interactions]);
     }
 
-    public function store(LeadRequest $request): RedirectResponse 
+    public function store(LeadRequest $request): RedirectResponse
     {
         $request->validated();
 
         $data = $request->all();
         $data['user_id'] = $request->user()->id;
-        
+
         //dd($data['tags']);
 
         if($request->new_company && ($request->new_company != '' || $request->new_company != null)){
@@ -159,7 +225,7 @@ class LeadController extends Controller
             $tags = $data['tags'];
             foreach($tags as $tag){
                 LeadTag::create(['lead_id' => $lead->id, 'tag_id' => $tag['id'],  'user_id' => $data['user_id']]);
-            } 
+            }
         }
         return Redirect::route('leads.show', ['lead' => $lead->id]);
     }
@@ -169,7 +235,7 @@ class LeadController extends Controller
         $user = $request->user();
         $tags = Tag::all()->where('user_id', $user->id);
 
-        
+
         $companies = Company::all()->where('user_id', $user->id);
 
 
@@ -187,7 +253,7 @@ class LeadController extends Controller
         $data = $request->all();
 
         $data['user_id'] = $request->user()->id;
-        
+
 
         if($request->new_company && ($request->new_company != '' || $request->new_company != null)){
             $newCompany = Company::create(['name' => $request->new_company, 'user_id' => $request->user()->id]);
@@ -200,12 +266,12 @@ class LeadController extends Controller
             $leadTags = $lead->load('leadTags')->leadTags;
             foreach($leadTags as $leadTag){
                 $leadTag->delete();
-            
+
             }
-            
+
             foreach($tags as $tag){
                 LeadTag::create(['lead_id' => $lead->id, 'tag_id' => $tag['id'],  'user_id' => $data['user_id']]);
-            } 
+            }
         }
 
         $lead->update($data);
