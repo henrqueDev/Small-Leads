@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CompanyFactory extends Factory
 {
-    protected static ?int $user_id;
+    protected static ?string  $user_id;
     /**
      * Define the model's default state.
      *
@@ -19,7 +19,7 @@ class CompanyFactory extends Factory
     {
         return [
             'name' => fake()->unique()->name(),
-            'user_id' => static::$user_id ??= 1
+            'user_id' => static::$user_id ??= 'aaaaaaaa-bbbb-1ccc-8ddd-eeeeeeeeeeee'
         ];
     }
 }

@@ -16,14 +16,13 @@ return new class extends Migration
             $table->text('description');
             $table->date('event_date');
             
-            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('lead_id');
             $table->unsignedBigInteger('interaction_type_id');
             
 
             $table->foreign('lead_id')->references('id')->on('leads')->cascadeOnDelete();
             
-            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignUuid('user_id')->references('id')->on('users');
             
             $table->foreign('interaction_type_id')->references('id')->on('interaction_types')->cascadeOnDelete();
             

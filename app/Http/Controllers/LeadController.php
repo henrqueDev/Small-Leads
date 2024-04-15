@@ -42,38 +42,6 @@ class LeadController extends Controller
         //dd(Lead::with('leadTags.tag')->get()[0]->leadTags[0]->tag);
         $filters = $request->query();
 
-        /*
-            public static function pontosEntregaConsumidor($ordemServico, $dataInicio, $dataFim, $tecnico)
-    {
-        $pontos = Consumidor::with(
-            'ponto_entrega.instalacao.ordem_servico',
-            'ponto_entrega.equipamento.instalacao.ordem_servico',
-            'ponto_entrega.equipamento.tecnico',
-            'ponto_entrega.ponto'
-        )
-        ->when($ordemServico, function ($query, $ordensServico) {
-            $query->whereHas('ponto_entrega.equipamento.instalacao', function ($q) use ($ordensServico) {
-                $q->whereIn('ordem_servico_id', $ordensServico);
-            });
-        })
-        ->when($dataInicio, function ($query, $dataInicio) {
-            $query->where('created_at', '>=', $dataInicio);
-        })
-        ->when($dataFim, function ($query, $dataFim) {
-            $query->where('created_at', '<=', $dataFim);
-        })
-        ->when($tecnico, function ($query, $tecnico) {
-            $query->whereIn('ponto_entrega.equipamento.tecnico_id', $tecnico);
-        })
-        ->orderBy('created_at');
-
-        return $pontos;
-    }
-
-        */
-
-        //$query = $user->leads()->with('user')->with('company')->with('leadTags.tag');
-
         $filter = array_key_exists('filter', $filters) ? $filters['filter'] : [];
 
         $filterTags = array_key_exists('tags', $filter);
@@ -93,7 +61,7 @@ class LeadController extends Controller
             $query->where('phone', 'like', '%' . $phone . '%');
         })
         ->when($filter['situation'] ?? null, function ($query, $situation) {
-            if($situation['is_paying']==="true" && $value['converted'] === "true"){
+            if($situation['is_paying']==="true" && $situation['converted'] === "true"){
                 $query->where('is_paying', 1);
                 $query->where('converted', 1);
             }
@@ -109,50 +77,7 @@ class LeadController extends Controller
             });
         })
         -> orderBy('name');
-
-        //dd($filter['converted'] === "false");
-/*
-        $filterTags = array_key_exists('tags', $filter);
-        if($filterTags){
-            $requestedTags = $filter['tags'];
-
-            $query->whereHas('leadTags', function ($query) use ($requestedTags) {
-                $query->whereIn('tag_id', $requestedTags);
-            });
-        }
-
-
-        foreach ($filter as $field => $value) {
-            if (in_array($field, ['name', 'email', 'phone'])) {
-                $query->where($field, 'like', '%' . $value . '%');
-            } else if ($field === 'company_id' && is_numeric($value)) {
-                $query->where('company_id', $value);
-            } else if ($field == 'situation') {
-
-                if($value['is_paying']==="true" && $value['converted'] === "true"){
-                    $query->where('is_paying', 1);
-                    $query->where('converted', 1);
-                }
-                else if ($value['converted'] === "true"){
-                    $query->where('converted', 1);
-                } else if ($value['is_paying'] === "true") {
-                    $query->where('is_paying', 1);
-                }
-            }
-            else if($field === 'order'){
-                if(array_key_exists('orderBy', $value)){
-                    if(in_array($value['orderBy'], ['name', 'email', 'phone', 'is_paying', 'converted'])){
-                        $query->orderBy($value['orderBy'], $value['orderDesc'] === 'true' ? 'desc' : 'asc' );
-                    }
-                }
-            }
-        }
-
-        $leads = $query->paginate(5)->withQueryString();
-
-
-        return Inertia::render('Lead/List', ['leads' => $leads, 'tags' => $tags, 'alreadySelectedTags' => $filterTags ? $filter['tags'] : [], 'companies' => $companies]);*/
-
+        
         $leads = $leads_filtered->paginate(5)->withQueryString();
         return Inertia::render('Lead/List', ['leads' => $leads, 'tags' => $tags, 'alreadySelectedTags' => $filterTags ? $filter['tags'] : [], 'companies' => $companies]);
     }

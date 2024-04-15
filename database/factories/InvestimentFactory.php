@@ -5,11 +5,10 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Company>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Investiment>
  */
-class TagFactory extends Factory
+class InvestimentFactory extends Factory
 {
-    protected static ?int $user_id;
     /**
      * Define the model's default state.
      *
@@ -18,8 +17,7 @@ class TagFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'user_id' => static::$user_id ??= 'aaaaaaaa-bbbb-1ccc-8ddd-eeeeeeeeeeee'
+            //
         ];
     }
 }

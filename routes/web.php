@@ -5,6 +5,7 @@ use App\Http\Controllers\LeadController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\InteractionController;
+use App\Http\Controllers\InvestimentController;
 
 use App\Http\Controllers\InteractionTypeController;
 use Illuminate\Foundation\Application;
@@ -73,6 +74,11 @@ Route::post('/interaction-types-store', [InteractionTypeController::class, 'stor
 Route::patch('/interaction-types-update/{interactionType}', [InteractionTypeController::class, 'update'])->middleware(['auth', 'verified'])->name('interactionTypes.update');
 Route::delete('/interaction-types-destroy/{interactionType}', [InteractionTypeController::class, 'destroy'])->middleware(['auth', 'verified'])->name('interactionTypes.destroy');
 
+
+Route::get('/investiments-list', [InvestimentController::class, 'list'])->middleware(['auth', 'verified'])->name('investiments.list');
+Route::get('/investiments-create', [InvestimentController::class, 'create'])->middleware(['auth', 'verified'])->name('investiments.create');
+Route::post('/investiments-store', [InvestimentController::class, 'store'])->middleware(['auth', 'verified'])->name('investiments.store');
+Route::get('/export-all-investiments', [InvestimentController::class, 'exportCSV'])->middleware(['auth', 'verified'])->name('investiments.export.csv');
 
 
 require __DIR__.'/auth.php';

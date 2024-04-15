@@ -21,11 +21,10 @@ return new class extends Migration
             $table->boolean('is_paying')->default(false);
 
             $table->unsignedBigInteger('company_id');
-            $table->unsignedBigInteger('user_id');
             $table->timestamps();
 
             $table->foreign('company_id')->references('id')->on('companies')->cascadeOnDelete();
-            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignUuid('user_id')->references('id')->on('users');
         });
     }
 

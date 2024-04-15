@@ -18,7 +18,10 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        User::factory()->count(3)->create(['password' => env('TEST_USERS_PASSWORD', 'secret')]);
+        User::factory()->count(1)->create([
+            'id' => 'aaaaaaaa-bbbb-1ccc-8ddd-eeeeeeeeeeee', 
+            'password' => env('TEST_USERS_PASSWORD', 'secret')
+        ]);
 
         Company::factory()->count(3)->has(
             Lead::factory()->count(3)

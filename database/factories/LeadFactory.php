@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class LeadFactory extends Factory
 {
-    protected static ?int $user_id;
+    protected static ?string $user_id;
     protected static ?int $company_id;
     /**
      * Define the model's default state.
@@ -25,7 +25,7 @@ class LeadFactory extends Factory
             'phone' => fake()->phoneNumber(),
             'converted' => false,
             'is_paying' => false,
-            'user_id' => static::$user_id ??= 1,
+            'user_id' => static::$user_id ??= 'aaaaaaaa-bbbb-1ccc-8ddd-eeeeeeeeeeee',
             'company_id' => static::$company_id ??= 1
         ];
     }

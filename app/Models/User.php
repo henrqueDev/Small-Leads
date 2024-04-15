@@ -9,20 +9,23 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'users';
+    
+    protected $keyType = 'string';
 
+    public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-
 
 
     protected $fillable = [
@@ -76,4 +79,18 @@ class User extends Authenticatable
     public function leads(){
         return $this->hasMany(Lead::class);
     }
+
+    public function investiments(){
+        return $this->hasMany(Investiment::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (User $user) {
+            if($user->id === null){
+                $user->id = Str::uuid();
+            }
+        });
+    }
+
 }
