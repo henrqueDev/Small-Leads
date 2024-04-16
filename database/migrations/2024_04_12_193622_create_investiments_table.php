@@ -11,19 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('interactions', function (Blueprint $table) {
+        Schema::create('investiments', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->text('description');
-            $table->date('event_date');
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->double('amount');
+            $table->date('investiment_date');
             $table->unsignedBigInteger('user_id');
             
-
-            $table->foreignUuid('lead_id')->references('id')->on('leads')->cascadeOnDelete();
-            
             $table->foreign('user_id')->references('id')->on('users');
-            
-            $table->foreignUuid('interaction_type_id')->references('id')->on('interaction_types')->cascadeOnDelete();
-            
+            $table->foreignUuid('company_id')->references('id')->on('companies')->cascadeOnDelete();
+
             $table->timestamps();
         });
     }
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('interactions');
+        Schema::dropIfExists('investiments');
     }
 };

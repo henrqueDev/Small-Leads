@@ -4,13 +4,18 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
+
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Company>
  */
 class LeadFactory extends Factory
 {
     protected static ?int $user_id;
-    protected static ?int $company_id;
+    protected static ?string $company_id;
+    protected static ?string $id;
+    
     /**
      * Define the model's default state.
      *
@@ -26,7 +31,7 @@ class LeadFactory extends Factory
             'converted' => false,
             'is_paying' => false,
             'user_id' => static::$user_id ??= 1,
-            'company_id' => static::$company_id ??= 1
+            'company_id' => 'aaaaaaaa-bbbb-1ccc-8ddd-eeeeeeeeeeee'
         ];
     }
 }
