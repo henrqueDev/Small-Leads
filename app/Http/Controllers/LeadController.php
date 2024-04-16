@@ -39,13 +39,39 @@ class LeadController extends Controller
         $user = $request->user();
         $tags = $user->load('tags')->tags;
         $companies = $user->load('companies')->companies;
-        //dd(Lead::with('leadTags.tag')->get()[0]->leadTags[0]->tag);
+
         $filters = $request->query();
 
         $filter = array_key_exists('filter', $filters) ? $filters['filter'] : [];
 
         $filterTags = array_key_exists('tags', $filter);
 
+        $leads = $this->filterLeads($user, $filter);
+
+        return Inertia::render('Lead/List', ['leads' => $leads, 'tags' => $tags, 'alreadySelectedTags' => $filterTags ? $filter['tags'] : [], 'companies' => $companies]);
+    }
+
+    public function listConverted(Request $request): Response
+    {
+        $user = $request->user();
+        $tags = $user->load('tags')->tags;
+
+
+        $query = $user->leads()->with('user', 'company', 'leadTags.tag');
+
+        $query->where('converted', 1);
+        $query->orderBy('is_paying', 'desc');
+
+        $leads = $query->paginate(5)->withQueryString();
+
+
+        return Inertia::render('Lead/ConvertedList', ['leads' => $leads]);
+    }
+
+    
+
+    protected function filterLeads(User $user, $filter){
+        //dd($filter);
         $leads_filtered = $user->leads()->with(
             'user',
             'company',
@@ -56,6 +82,7 @@ class LeadController extends Controller
         })
         ->when($filter['email'] ?? null, function ($query, $email) {
             $query->where('email', 'like', '%' . $email . '%');
+            dd('ola');
         })
         ->when($filter['phone'] ?? null, function ($query, $phone) {
             $query->where('phone', 'like', '%' . $phone . '%');
@@ -76,44 +103,17 @@ class LeadController extends Controller
                 $query->whereIn('tag_id', $tags);
             });
         })
-        -> orderBy('name');
+        ->when($filter['order'] ?? null, function ($query, $order){
+            if(array_key_exists('orderBy', $order)){
+                if(in_array($order['orderBy'], ['name', 'email', 'phone', 'is_paying', 'converted'])){
+                    $query->orderBy($order['orderBy'], $order['orderDesc'] === 'true' ? 'desc' : 'asc' );
+                }
+            }
+        });
         
         $leads = $leads_filtered->paginate(5)->withQueryString();
-        return Inertia::render('Lead/List', ['leads' => $leads, 'tags' => $tags, 'alreadySelectedTags' => $filterTags ? $filter['tags'] : [], 'companies' => $companies]);
-    }
-
-
-    public function listConverted(Request $request): Response
-    {
-        $user = $request->user();
-        $tags = $user->load('tags')->tags;
-
-        //dd(Lead::with('leadTags.tag')->get()[0]->leadTags[0]->tag);
-        $filters = $request->query();
-
-
-        $query = $user->leads()->with('user')->with('company')->with('leadTags.tag');
-
-        $filter = array_key_exists('filter', $filters) ? $filters['filter'] : [];
-
-        $query->where('converted', 1);
-        $query->orderBy('is_paying', 'desc');
-
-        //dd($filter['converted'] === "false");
-
-        $filterTags = array_key_exists('tags', $filter);
-        if($filterTags){
-            $requestedTags = $filter['tags'];
-
-            $query->whereHas('leadTags', function ($query) use ($requestedTags) {
-                $query->whereIn('tag_id', $requestedTags);
-            });
-        }
-
-        $leads = $query->paginate(5)->withQueryString();
-
-
-        return Inertia::render('Lead/ConvertedList', ['leads' => $leads, 'tags' => $tags, 'alreadySelectedTags' => $filterTags ? $filter['tags'] : []]);
+        
+        return $leads;
     }
 
     public function show(Request $request, Lead $lead): Response
@@ -129,6 +129,10 @@ class LeadController extends Controller
         $tags = $lead->leadTags->load(['tag']);
 
         return Inertia::render('Lead/Show', ['lead' => $lead, 'tags' => $tags, 'interactions' => $interactions]);
+    }
+
+    protected function filter($filter){
+
     }
 
     public function store(LeadRequest $request): RedirectResponse
