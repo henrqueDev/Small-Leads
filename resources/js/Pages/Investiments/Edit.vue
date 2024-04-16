@@ -65,7 +65,7 @@ const deleteInvestiment = () => {
     reverseButtons: true,
   }).then((result) => {
     if (result.isConfirmed) {
-      router.delete(route("investiment.destroy", { investiment: props.investiment.id }));
+      router.delete(route("investiments.destroy", { investiment: props.investiment.id }));
     }
   });
 };

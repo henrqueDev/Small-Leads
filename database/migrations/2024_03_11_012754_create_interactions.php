@@ -12,19 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('interactions', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->text('description');
             $table->date('event_date');
-            
-            $table->unsignedBigInteger('lead_id');
-            $table->unsignedBigInteger('interaction_type_id');
+            $table->unsignedBigInteger('user_id');
             
 
-            $table->foreign('lead_id')->references('id')->on('leads')->cascadeOnDelete();
+            $table->foreignUuid('lead_id')->references('id')->on('leads')->cascadeOnDelete();
             
-            $table->foreignUuid('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
             
-            $table->foreign('interaction_type_id')->references('id')->on('interaction_types')->cascadeOnDelete();
+            $table->foreignUuid('interaction_type_id')->references('id')->on('interaction_types')->cascadeOnDelete();
             
             $table->timestamps();
         });

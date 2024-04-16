@@ -81,6 +81,7 @@ Route::get('/investiments-edit/{investiment}', [InvestimentController::class, 'e
 
 Route::patch('/investiments-update/{investiment}', [InvestimentController::class, 'update'])->middleware(['auth', 'verified'])->name('investiments.update');
 Route::post('/investiments-store', [InvestimentController::class, 'store'])->middleware(['auth', 'verified'])->name('investiments.store');
+Route::delete('/investiments-destroy/{investiment}', [InvestimentController::class, 'destroy'])->middleware(['auth', 'verified'])->name('investiments.destroy');
 Route::get('/export-all-investiments', [InvestimentController::class, 'exportCSV'])->middleware(['auth', 'verified'])->name('investiments.export.csv');
 
 

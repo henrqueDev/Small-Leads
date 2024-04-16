@@ -19,7 +19,7 @@ class TagFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'user_id' => static::$user_id ??= 'aaaaaaaa-bbbb-1ccc-8ddd-eeeeeeeeeeee'
+            'user_id' => static::$user_id ??= 1
         ];
     }
 }

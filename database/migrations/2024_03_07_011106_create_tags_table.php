@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tags', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
-
-            $table->foreignUuid('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('user_id');
+            
+            $table->foreign('user_id')->references('id')->on('users');
             
             $table->timestamps();
         });

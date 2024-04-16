@@ -4,12 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class Lead extends Model
 {
     use HasFactory;
 
     protected $table = 'leads';
+
+    
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
 
     protected $fillable = [
         'name',
@@ -36,6 +44,14 @@ class Lead extends Model
 
     public function leadTags(){
         return $this->hasMany(LeadTag::class);
+    }
+
+    protected static function booted() {
+        Static::creating(function (Model $model) {
+            if($model->id === null){
+                $model->id = Str::uuid();
+            }
+        });
     }
 
 }

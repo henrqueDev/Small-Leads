@@ -12,13 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lead_tags', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('lead_id');
-            $table->unsignedBigInteger('tag_id');
-
-            $table->foreign('lead_id')->references('id')->on('leads')->onDelete('cascade');
-            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
-            $table->foreignUuid('user_id')->references('id')->on('users');
+            $table->uuid('id')->primary();
+            $table->unsignedBigInteger('user_id');
+            
+            $table->foreignUuid('lead_id')->references('id')->on('leads')->onDelete('cascade');
+            $table->foreignUuid('tag_id')->references('id')->on('tags')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users');
             
             $table->timestamps();
         });

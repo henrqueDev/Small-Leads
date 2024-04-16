@@ -17,6 +17,8 @@ use App\Http\Requests\Investiment\EditInvestimentRequest;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Http\Requests\Investiment\UpdateInvestimentRequest;
 use App\Http\Requests\Investiment\CreateInvestimentRequest;
+use App\Http\Requests\Investiment\DestroyInvestimentRequest;
+
 
 class InvestimentController extends Controller
 {
@@ -59,7 +61,7 @@ class InvestimentController extends Controller
 
         $investiment = Investiment::create($data);
         
-        return Redirect::route('investiments.list', ['investiment' => $investiment->id]);
+        return Redirect::route('investiments.list');
     }
     
     public function update(UpdateInvestimentRequest $request, Investiment $investiment): RedirectResponse
@@ -70,7 +72,14 @@ class InvestimentController extends Controller
 
         $investiment->update($data);
         
-        return Redirect::route('investiments.list', ['investiment' => $investiment->id]);
+        return Redirect::route('investiments.list');
+    }
+
+    public function destroy(DestroyInvestimentRequest $request, Investiment $investiment): RedirectResponse
+    {
+        $investiment->delete();
+        
+        return Redirect::route('investiments.list');
     }
     
     public function exportCSV(Request $request): StreamedResponse

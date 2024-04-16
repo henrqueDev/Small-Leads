@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class Interaction extends Model
 {
@@ -12,6 +14,10 @@ class Interaction extends Model
 
     protected $table = 'interactions';
 
+    
+    protected $keyType = 'string';
+
+    public $incrementing = false;
 
 
 
@@ -29,8 +35,12 @@ class Interaction extends Model
         return $this->belongsTo(InteractionType::class, 'interaction_type_id');
     }
 
-    /*public function leadTags(){
-        return $this->has_many(LeadTag::class);
-    }*/
+    protected static function booted() {
+        Static::creating(function (Model $model) {
+            if($model->id === null){
+                $model->id = Str::uuid();
+            }
+        });
+    }
 
 }
