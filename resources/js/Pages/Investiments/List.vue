@@ -5,7 +5,10 @@ import { Head, usePage, router } from "@inertiajs/vue3";
 import TablePaginationFooter from "@/Components/TablePaginationFooter.vue";
 import NavLink from "@/Components/NavLink.vue";
 import AddIcon from "@/Components/AddIcon.vue";
+import ExportDocumentIcon from "@/Components/ExportDocumentIcon.vue";
 import FilterIcon from "@/Components/FilterIcon.vue";
+import SearchIcon from '@/Components/SearchIcon.vue';
+import ModalDescription from '@/Pages/Interactions/Partials/ModalDescription.vue';
 
 const props = defineProps({
   investiments: {
@@ -26,7 +29,7 @@ const investimentsHeaders = [
   },
   {
     column: "amount",
-    title: "Amount",
+    title: "Amount ($)",
     sortable: true,
   },
   {
@@ -58,9 +61,14 @@ const showFilter = ref(false);
 const sortBy = ref("title");
 const sortDesc = ref(false);
 
-const showFilterAction = () => {
-  showFilter.value = true;
+const showModal = ref(false);
+const showModalDescription = ref(false);
+
+const showModalAction = (description) => {
+  showModal.value = true;
+  showModalDescription.value = description
 };
+
 </script>
 
 <template>
@@ -75,25 +83,20 @@ const showFilterAction = () => {
     <div class="py-12">
       <div class="max-w-8xl mx-auto sm:px-6 lg:px-6">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-xl">
-          <button
-            class="m-5 text-center bg-gray-900 p-3 hover:bg-gray-700 duration-150 ease-in-out rounded-xl text-gray-400"
-            @click="showFilterAction()"
-          >
-            <FilterIcon class="mt-1 ml-1 text-center text-xs"></FilterIcon>
-            Filter
-          </button>
+        
+          <ModalDescription :show="showModal" :description="showModalDescription" @close="showModal=false" />
           <NavLink
             class="m-3 bg-gray-900 p-3 h-full hover:bg-gray-700 duration-150 ease-in-out rounded-xl"
             :href="route('investiments.create')"
           >
             <AddIcon class="mt-3 text-center text-xs" />
-            <span class="mt-3">Create lead</span>
+            <span class="mt-3">Create investiment</span>
           </NavLink>
           <a
                       class="m-3 text-center text-md col-span-1 text-gray-300 bg-gray-900 p-2 hover:bg-gray-700 duration-150 ease-in-out rounded-xl cursor"
                       :href="route('investiments.export.csv')"
           >
-            Export
+            <span class="mt-3">Export</span>
           </a>
           <div class="p-3 text-gray-900 dark:text-gray-100 text-wrap overflow-x-auto">
             <table
@@ -118,17 +121,18 @@ const showFilterAction = () => {
                   
                   <td class="text-center p-2 rounded-sm">{{ investiment.company.name }}</td>
                   <td class="text-center p-2 rounded-sm">{{ investiment.amount }}</td>
-                  <td class="text-center p-2 rounded-sm">{{ investiment.description }}</td>
+                  <td class="text-center p-2 rounded-sm">
+                    <button
+                      class="m-3 text-md col-span-1 p-3 text-white bg-gray-900 p-3 hover:bg-gray-700 duration-150 ease-in-out rounded-xl"
+                      @click="showModalAction(investiment.description)"
+                    ><SearchIcon /></button>
+                  </td>
                   <td class="text-center p-2 rounded-sm">{{ investiment.investiment_date }}</td>
 
                   <td class="text-center p-2 rounded-sm">
                     <a
                       class="m-3 text-center text-md col-span-1 text-gray-300 bg-gray-900 p-2 hover:bg-gray-700 duration-150 ease-in-out rounded-xl cursor"
-                    >
-                      Show
-                    </a>
-                    <a
-                      class="m-3 text-center text-md col-span-1 text-gray-300 bg-gray-900 p-2 hover:bg-gray-700 duration-150 ease-in-out rounded-xl cursor"
+                      :href="route('investiments.edit', {investiment: investiment.id })"
                     >
                       Edit
                     </a>

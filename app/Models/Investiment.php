@@ -12,6 +12,10 @@ class Investiment extends Model
 
     protected $table = 'investiments';
 
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+    
     protected $fillable = [
         'title',
         'amount',

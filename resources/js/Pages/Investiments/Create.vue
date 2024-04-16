@@ -83,7 +83,6 @@ const loadleadSelected = (leadSelected) => {
               <div class="mt-5 mr-5">
                 <InputLabel for="description" value="Description" />
                 <TextArea
-                  required
                   id="description"
                   type="text"
                   class="mt-1 block w-full"
@@ -127,7 +126,7 @@ const loadleadSelected = (leadSelected) => {
                     </option>
                   </select>
                     
-                    <InputError class="mt-2" :message="form.errors.amount" />
+                    <InputError class="mt-2" :message="form.errors.company_id" />
                   </div>
                  
                 </div>
@@ -137,7 +136,7 @@ const loadleadSelected = (leadSelected) => {
 
               <div class="mt-4">
                 <div>
-                    <InputLabel for="amount" value="Amount" />
+                    <InputLabel for="amount" value="Amount($)" />
                     <TextInput required type="number" id="amount" v-model="form.amount" />
                     
                     <InputError class="mt-2" :message="form.errors.amount" />

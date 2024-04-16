@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('investiments', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('title');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->double('amount');
             $table->date('investiment_date');            
             $table->unsignedBigInteger('company_id');

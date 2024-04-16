@@ -77,6 +77,9 @@ Route::delete('/interaction-types-destroy/{interactionType}', [InteractionTypeCo
 
 Route::get('/investiments-list', [InvestimentController::class, 'list'])->middleware(['auth', 'verified'])->name('investiments.list');
 Route::get('/investiments-create', [InvestimentController::class, 'create'])->middleware(['auth', 'verified'])->name('investiments.create');
+Route::get('/investiments-edit/{investiment}', [InvestimentController::class, 'edit'])->middleware(['auth', 'verified'])->name('investiments.edit');
+
+Route::patch('/investiments-update/{investiment}', [InvestimentController::class, 'update'])->middleware(['auth', 'verified'])->name('investiments.update');
 Route::post('/investiments-store', [InvestimentController::class, 'store'])->middleware(['auth', 'verified'])->name('investiments.store');
 Route::get('/export-all-investiments', [InvestimentController::class, 'exportCSV'])->middleware(['auth', 'verified'])->name('investiments.export.csv');
 

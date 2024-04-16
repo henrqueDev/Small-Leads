@@ -8,10 +8,15 @@ use Inertia\Inertia;
 
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
+
+use Illuminate\Support\Facades\Redirect;
 use App\Models\Investiment;
 use App\Models\Company;
 use App\Models\User;
+use App\Http\Requests\Investiment\EditInvestimentRequest;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Http\Requests\Investiment\UpdateInvestimentRequest;
+use App\Http\Requests\Investiment\CreateInvestimentRequest;
 
 class InvestimentController extends Controller
 {
@@ -32,12 +37,21 @@ class InvestimentController extends Controller
     public function create(Request $request): Response
     {
         $user = $request->user();
+        $companies = $user->companies()->get();
 
-        $companies = Company::all()->where('user_id', $user->id);
         return Inertia::render('Investiments/Create', ['user' => $user->id, 'companies' => $companies]);
     }
+
+    public function edit(EditInvestimentRequest $request, Investiment $investiment): Response
+    {
+        $user = $request->user();
+
+        $companies = $user->companies()->get();
+
+        return Inertia::render('Investiments/Edit', ['user' => $user->id, 'companies' => $companies, 'investiment' => $investiment]);
+    }
     
-    public function store(Request $request): RedirectResponse
+    public function store(CreateInvestimentRequest $request): RedirectResponse
     {
 
         $data = $request->all();
@@ -48,11 +62,21 @@ class InvestimentController extends Controller
         return Redirect::route('investiments.list', ['investiment' => $investiment->id]);
     }
     
+    public function update(UpdateInvestimentRequest $request, Investiment $investiment): RedirectResponse
+    {
+
+        $data = $request->all();
+        $data['user_id'] = $request->user()->id;
+
+        $investiment->update($data);
+        
+        return Redirect::route('investiments.list', ['investiment' => $investiment->id]);
+    }
     
-    public function exportCSV(): StreamedResponse
+    public function exportCSV(Request $request): StreamedResponse
     {
         $filename = 'Investiment-data.csv';
-    
+        $user = $request->user();
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=\"$filename\"",
@@ -67,26 +91,21 @@ class InvestimentController extends Controller
             // Add CSV headers
             fputcsv($handle, [
                 'Title',
+                'Company',
                 'Amount',
                 'Date'
             ]);
-    
-             // Fetch and process data in chunks
             Investiment::chunk(25, function ($investiments) use ($handle) {
                 foreach ($investiments as $investiment) {
-             // Extract data from each Investiment.
                     $data = [
                         isset($investiment->title)? $investiment->title : '',
+                        isset($investiment->company)? $investiment->company->name : '',
                         isset($investiment->amount)? $investiment->amount : 0.00,
                         isset($investiment->investiment_date)? $investiment->investiment_date : ''
                     ];
-    
-             // Write data to a CSV file.
                     fputcsv($handle, $data);
                 }
             });
-    
-            // Close CSV file handle
             fclose($handle);
         }, 200, $headers);
     }
