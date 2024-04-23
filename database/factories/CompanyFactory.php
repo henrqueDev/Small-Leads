@@ -21,9 +21,7 @@ class CompanyFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => 'aaaaaaaa-bbbb-1ccc-8ddd-eeeeeeeeeeee',
             'name' => fake()->unique()->name(),
-            'user_id' => static::$user_id ??= 1
         ];
     }
 }

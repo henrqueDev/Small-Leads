@@ -29,9 +29,7 @@ class LeadFactory extends Factory
             'email' => fake()->email(),
             'phone' => fake()->phoneNumber(),
             'converted' => false,
-            'is_paying' => false,
-            'user_id' => static::$user_id ??= 1,
-            'company_id' => 'aaaaaaaa-bbbb-1ccc-8ddd-eeeeeeeeeeee'
+            'is_paying' => false
         ];
     }
 }
