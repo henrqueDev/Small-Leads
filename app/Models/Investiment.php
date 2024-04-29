@@ -21,12 +21,12 @@ class Investiment extends Model
         'amount',
         'description',
         'investiment_date',
-        'company_id',
+        'lead_id',
         'user_id'
     ];
 
-    public function company(){
-        return $this->belongsTo(Company::class);
+    public function lead(){
+        return $this->belongsTo(Lead::class);
     }
 
     public function user(){

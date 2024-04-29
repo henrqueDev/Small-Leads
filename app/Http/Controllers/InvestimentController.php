@@ -29,7 +29,8 @@ class InvestimentController extends Controller
 
         $investiments = $user->investiments()->with(
             'user',
-            'company'
+            'lead',
+            'lead.company'
         );
         
         $investimentsPaginated = $investiments->paginate(5)->withQueryString();
@@ -40,8 +41,9 @@ class InvestimentController extends Controller
     {
         $user = $request->user();
         $companies = $user->companies()->get();
+        $leads = $user->leads()->get();
 
-        return Inertia::render('Investiments/Create', ['user' => $user->id, 'companies' => $companies]);
+        return Inertia::render('Investiments/Create', ['user' => $user->id, 'companies' => $companies, 'leads' => $leads]);
     }
 
     public function edit(EditInvestimentRequest $request, Investiment $investiment): Response
@@ -49,8 +51,9 @@ class InvestimentController extends Controller
         $user = $request->user();
 
         $companies = $user->companies()->get();
+        $leads = $user->leads()->get();
 
-        return Inertia::render('Investiments/Edit', ['user' => $user->id, 'companies' => $companies, 'investiment' => $investiment]);
+        return Inertia::render('Investiments/Edit', ['user' => $user->id, 'companies' => $companies, 'leads' => $leads, 'investiment' => $investiment]);
     }
     
     public function store(CreateInvestimentRequest $request): RedirectResponse
@@ -94,27 +97,30 @@ class InvestimentController extends Controller
             'Expires' => '0',
         ];
     
-        return response()->stream(function () {
+        return response()->stream(function () use ($user) {
             $handle = fopen('php://output', 'w');
     
             // Add CSV headers
             fputcsv($handle, [
                 'Title',
+                'Lead',
                 'Company',
-                'Amount',
+                'Amount($)',
                 'Date'
             ]);
-            Investiment::chunk(25, function ($investiments) use ($handle) {
+
+            $investiments = $user->investiments()->with('lead', 'lead.company')->get();
                 foreach ($investiments as $investiment) {
                     $data = [
                         isset($investiment->title)? $investiment->title : '',
-                        isset($investiment->company)? $investiment->company->name : '',
+                        isset($investiment->lead)? $investiment->lead->name . ' ' . $investiment->lead->last_name : '',
+                        isset($investiment->lead->company)? $investiment->lead->company->name : '',
                         isset($investiment->amount)? $investiment->amount : 0.00,
                         isset($investiment->investiment_date)? $investiment->investiment_date : ''
                     ];
                     fputcsv($handle, $data);
                 }
-            });
+            ;
             fclose($handle);
         }, 200, $headers);
     }

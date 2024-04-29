@@ -19,9 +19,8 @@ return new class extends Migration
             $table->date('investiment_date');
             $table->unsignedBigInteger('user_id');
             
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreignUuid('company_id')->references('id')->on('companies')->cascadeOnDelete();
-
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreignUuid('lead_id')->references('id')->on('leads')->cascadeOnDelete();
             $table->timestamps();
         });
     }

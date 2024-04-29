@@ -38,6 +38,10 @@ class Lead extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function investiments(){
+        return $this->hasMany(Investiment::class);
+    }
+
     public function interactions(){
         return $this->hasMany(Interaction::class);
     }

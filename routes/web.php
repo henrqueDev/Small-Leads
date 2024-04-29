@@ -46,6 +46,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/leads-create', [LeadController::class, 'create'])->name('leads.create');
     Route::post('/leads-store', [LeadController::class, 'store'])->name('leads.store');
     Route::get('/leads-list', [LeadController::class, 'list'])->name('leads.list');
+    Route::get('/leads-all-company', [LeadController::class, 'allByCompany'])->name('leads.all.company');
     Route::get('/leads-converted-list', [LeadController::class, 'listConverted'])->name('leads.converted.list');
     Route::get('/leads-show/{lead}', [LeadController::class, 'show'])->name('leads.show');
     Route::get('/leads-edit/{lead}', [LeadController::class, 'edit'])->name('leads.edit');

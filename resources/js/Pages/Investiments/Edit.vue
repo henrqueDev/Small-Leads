@@ -11,6 +11,7 @@ import AddIcon from "@/Components/AddIcon.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import Swal from "sweetalert2";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import DateInput from "@/Components/DateInput.vue";
 
 const props = defineProps({
   tags: {
@@ -27,20 +28,16 @@ const props = defineProps({
   },
 });
 
+const valid_leads = ref(props.leads);
+
 const form = useForm({
   id: props.investiment.id,
   title: props.investiment.title,
   description: props.investiment.description,
   investiment_date: props.investiment.investiment_date,
   amount: props.investiment.amount,
-  company_id: props.investiment.company_id
+  lead_id: props.investiment.lead_id
 });
-
-watch(form, () => {
-  if(form.converted == false) {
-    form.is_paying = false;
-  }
-})
 
 const updateInvestiment = () => {
   form.patch(route("investiments.update", { investiment: form.id }));
@@ -122,27 +119,16 @@ const deleteInvestiment = () => {
                 <InputError class="mt-2" :message="form.errors.description" />
               </div>
 
-              <div class="mt-4 grid grid-cols-12">
-                <div class="col-span-4">
-                  <InputLabel for="company" value="Company" />
-                  <select
-                    required
-                    id="company"
-                    class="w-75 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                    v-model="form.company_id"
-                  >
-                    <option
-                      v-for="company in companies"
-                      :value="company.id"
-                      :key="company.id"
-                    >
-                      {{ company.name }}
-                    </option>
-                  </select>
-
-                  <InputError class="mt-2" :message="form.errors.company_id" />
+              <div class="mt-4">
+                <div class="inline-flex">
+                  <div>
+                    <InputLabel for="investiment_date" value="Event date" />
+                    <DateInput required type="date" id="investiment_date" v-model="form.investiment_date" />
+                    
+                    <InputError class="mt-2" :message="form.errors.investiment_date" />
+                  </div>
                 </div>
-                </div>
+              </div>
             </form>
 
             <div class="flex items-center justify-center mt-4">
