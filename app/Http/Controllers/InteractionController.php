@@ -9,6 +9,7 @@ use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Lead;
 use App\Http\Requests\Interaction\CreateInteractionRequest;
+use App\Http\Requests\Interaction\CreateInteractionRequestPage;
 use App\Http\Requests\Interaction\DestroyInteractionRequest;
 
 use App\Http\Requests\Interaction\EditInteractionRequest;
@@ -26,13 +27,9 @@ use App\Models\Interaction;
 class InteractionController extends Controller
 {
     //
-    public function create(Request $request, Lead $lead): Response
+    public function create(CreateInteractionRequestPage $request, Lead $lead): Response
     {
         $user = $request->user();
-
-        if($lead->user_id != $user->id){
-            dd($user->id);
-        }
 
         $interactionTypes = $user->load(['interactionTypes'])->interactionTypes;
 

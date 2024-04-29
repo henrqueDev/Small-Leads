@@ -72,7 +72,6 @@ class LeadController extends Controller
     
 
     protected function filterLeads(User $user, $filter){
-        //dd($filter);
         $leads_filtered = $user->leads()->with(
             'user',
             'company',
@@ -83,7 +82,6 @@ class LeadController extends Controller
         })
         ->when($filter['email'] ?? null, function ($query, $email) {
             $query->where('email', 'like', '%' . $email . '%');
-            dd('ola');
         })
         ->when($filter['phone'] ?? null, function ($query, $phone) {
             $query->where('phone', 'like', '%' . $phone . '%');
@@ -125,7 +123,7 @@ class LeadController extends Controller
         if($request->user()->id != $lead->user_id){
             return Redirect::route('leads.list');
         }
-        //dd($lead);
+        
         $leadShow = $lead->load(['company']);
         $leadTags = $lead->load(['leadTags']);
         $interactions = $lead->load(['interactions'])->interactions->load(['interactionType']);
