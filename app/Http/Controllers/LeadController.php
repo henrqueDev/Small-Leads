@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 
 use Inertia\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Lead;
@@ -214,6 +215,18 @@ class LeadController extends Controller
     public function destroy(Request $request, Lead $lead) {
         $lead->delete();
         return Redirect::route('leads.list');
+    }
+
+
+    
+
+    public function allByCompany(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $filter = $request->query();
+
+        $leads = $filter ? $user->leads()->where('company_id', $filter['company_id'])->get() : null;
+        return response()->json($leads);
     }
 
 }

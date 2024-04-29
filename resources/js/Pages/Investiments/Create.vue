@@ -18,24 +18,37 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  leads: {
+    type: Array,
+    required: true
+  },
   companies: {
     type: Array,
-    required: false
+    required: true
   }
 });
 
-
-const lead = ref(props.lead);
-const interaction_type_not_found = ref(false);
+const valid_leads = ref(props.leads);
 
 const form = useForm({
   description: '',
   title: '',
   amount: 0.01,
   investiment_date: '',
-  company_id: null
+  lead_id: null
 });
 
+const filter = useForm({
+  company_id: null,
+});
+
+
+watch(filter, () => {
+  axios.get(route('leads.all.company'), {params:{company_id: filter.company_id}}).then((res) => {
+    valid_leads.value = res.data;
+    form.lead_id = null;
+  })
+});
 
 const submit = () => {
   console.log(form.post(route('investiments.store')))
@@ -44,10 +57,6 @@ const submit = () => {
 const toggleTagForm = () => {
   showTagForm.value = !showTagForm.value;
 
-};
-
-const loadleadSelected = (leadSelected) => {
-  form.lead = Object.entries(leadSelected).map(([key, value]) => value);
 };
 
 </script>
@@ -107,16 +116,15 @@ const loadleadSelected = (leadSelected) => {
                     <InputError class="mt-2" :message="form.errors.investiment_date" />
                   </div>
 
-                  
-                  
+
                   <div class="ml-5">
                     <InputLabel for="company" value="Company" />
                     <select
-                    :disabled="company_not_found"
-                    required
-                    class="w-75 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                    v-model="form.company_id"
-                  >
+                      id="company"
+                      required
+                      class="w-75 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                      v-model="filter.company_id"
+                    >
                     <option
                       v-for="company in companies"
                       :value="company.id"
@@ -126,7 +134,29 @@ const loadleadSelected = (leadSelected) => {
                     </option>
                   </select>
                     
-                    <InputError class="mt-2" :message="form.errors.company_id" />
+                    <InputError class="mt-2" :message="filter.errors.company_id" />
+                  </div>
+
+                  
+                  
+                  <div class="ml-5">
+                    <InputLabel for="lead" value="Lead" />
+                    <select
+                      :disabled="filter.company_id == null"
+                      required
+                      class="w-75 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                      v-model="form.lead_id"
+                  >
+                    <option
+                      v-for="lead in valid_leads"
+                      :value="lead.id"
+                      :key="lead.id"
+                    >
+                      {{ lead.name }}
+                    </option>
+                  </select>
+                    
+                    <InputError class="mt-2" :message="form.errors.lead_id" />
                   </div>
                  
                 </div>

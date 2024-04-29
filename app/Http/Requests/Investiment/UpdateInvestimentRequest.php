@@ -26,7 +26,7 @@ class UpdateInvestimentRequest extends FormRequest
             "title" => "required",
             "investiment_date" => "required",
             "amount" => "required",
-            "company_id" => "required"
+            "lead_id" => "required"
         ];
     }
 }

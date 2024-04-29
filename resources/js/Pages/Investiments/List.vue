@@ -23,6 +23,12 @@ const investimentsHeaders = [
     sortable: true,
   },
   {
+    column: "lead",
+    title: "Lead",
+    sortable: true,
+  },
+  
+  {
     column: "company",
     title: "Company",
     sortable: true,
@@ -119,7 +125,10 @@ const showModalAction = (description) => {
                 >
                   <td class="text-center p-2 rounded-sm">{{ investiment.title }}</td>
                   
-                  <td class="text-center p-2 rounded-sm">{{ investiment.company.name }}</td>
+                  <td class="text-center p-2 rounded-sm">{{ investiment.lead.name }}</td>
+                  
+                  
+                  <td class="text-center p-2 rounded-sm">{{ investiment.lead.company.name }}</td>
                   <td class="text-center p-2 rounded-sm">{{ investiment.amount }}</td>
                   <td class="text-center p-2 rounded-sm">
                     <button

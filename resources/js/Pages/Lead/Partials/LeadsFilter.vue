@@ -122,9 +122,6 @@ const queryParams = (...args) => {
       orderDesc: updatedQuery.get("filter[order][orderDesc]") == "true" ? true : false,
     },
   };
-
-  console.log(updatedQuery.get("filter[converted]") != "true" ? "oxi" : "ah");
-
   return updatedFilter;
 };
 
