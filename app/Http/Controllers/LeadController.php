@@ -87,6 +87,9 @@ class LeadController extends Controller
         ->when($filter['phone'] ?? null, function ($query, $phone) {
             $query->where('phone', 'like', '%' . $phone . '%');
         })
+        ->when($filter['company_id'] ?? null, function ($query, $company_id) {
+            $query->where('company_id', $company_id);
+        })
         ->when($filter['situation'] ?? null, function ($query, $situation) {
             if($situation['is_paying']==="true" && $situation['converted'] === "true"){
                 $query->where('is_paying', 1);
